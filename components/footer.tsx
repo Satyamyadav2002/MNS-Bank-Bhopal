@@ -39,9 +39,10 @@ const compliance = [
 
 export function Footer() {
   return (
-    <footer className="bg-secondary text-white">
+    <footer className="bg-secondary text-white relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
       {/* Grievance Banner */}
-      <div className="bg-primary py-4">
+      <div className="bg-primary/95 backdrop-blur-md border-b border-white/10 py-4 relative z-10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-white">
             <div className="flex items-center gap-3">
@@ -73,10 +74,10 @@ export function Footer() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
             {/* Bank Info */}
-            <div className="col-span-2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex items-center justify-center w-12 h-12 bg-primary rounded-full">
-                  <Building2 className="h-6 w-6 text-white" />
+            <div className="col-span-2 relative z-10">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-primary to-[#8B0015] rounded-2xl shadow-lg">
+                  <Building2 className="h-7 w-7 text-white" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold">MNS Bank</h3>
@@ -108,7 +109,7 @@ export function Footer() {
               <ul className="space-y-2">
                 {quickLinks.map((link) => (
                   <li key={link.title}>
-                    <Link href={link.href} className="text-sm text-white/70 hover:text-white hover:underline transition-colors">
+                    <Link href={link.href} className="text-sm text-white/60 hover:text-accent hover:translate-x-1 inline-block transition-all duration-300">
                       {link.title}
                     </Link>
                   </li>
@@ -122,7 +123,7 @@ export function Footer() {
               <ul className="space-y-2">
                 {products.map((link) => (
                   <li key={link.title}>
-                    <Link href={link.href} className="text-sm text-white/70 hover:text-white hover:underline transition-colors">
+                    <Link href={link.href} className="text-sm text-white/60 hover:text-accent hover:translate-x-1 inline-block transition-all duration-300">
                       {link.title}
                     </Link>
                   </li>
@@ -136,7 +137,7 @@ export function Footer() {
               <ul className="space-y-2">
                 {services.map((link) => (
                   <li key={link.title}>
-                    <Link href={link.href} className="text-sm text-white/70 hover:text-white hover:underline transition-colors">
+                    <Link href={link.href} className="text-sm text-white/60 hover:text-accent hover:translate-x-1 inline-block transition-all duration-300">
                       {link.title}
                     </Link>
                   </li>
@@ -151,12 +152,12 @@ export function Footer() {
                 {compliance.map((link) => (
                   <li key={link.title}>
                     {link.external ? (
-                      <a href={link.href} target="_blank" rel="noopener noreferrer" className="text-sm text-white/70 hover:text-white hover:underline transition-colors inline-flex items-center gap-1">
+                      <a href={link.href} target="_blank" rel="noopener noreferrer" className="text-sm text-white/60 hover:text-accent hover:translate-x-1 inline-flex items-center gap-1 transition-all duration-300">
                         {link.title}
                         <ExternalLink className="h-3 w-3" />
                       </a>
                     ) : (
-                      <Link href={link.href} className="text-sm text-white/70 hover:text-white hover:underline transition-colors">
+                      <Link href={link.href} className="text-sm text-white/60 hover:text-accent hover:translate-x-1 inline-block transition-all duration-300">
                         {link.title}
                       </Link>
                     )}

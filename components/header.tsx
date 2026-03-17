@@ -75,7 +75,7 @@ export function Header() {
       </div>
 
       {/* Main Header */}
-      <div className="bg-white/95 backdrop-blur-md border-b border-border shadow-sm">
+      <div className="bg-white/80 backdrop-blur-2xl border-b border-white shadow-[0_4px_30px_rgba(0,0,0,0.03)] transition-all duration-300 relative z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
@@ -163,11 +163,11 @@ export function Header() {
             </NavigationMenu>
 
             {/* CTA Buttons */}
-            <div className="flex items-center gap-3">
-              <Button variant="outline" className="hidden md:inline-flex border-primary text-primary hover:bg-primary hover:text-white">
+            <div className="flex items-center gap-4">
+              <Button variant="outline" className="hidden md:inline-flex border-primary/20 bg-white/50 backdrop-blur-sm text-foreground hover:bg-white/80 hover:border-primary/40 rounded-xl transition-all shadow-sm">
                 Open Account
               </Button>
-              <Button className="bg-primary hover:bg-[#8B0015] text-white">
+              <Button className="bg-primary hover:bg-primary/90 text-white rounded-xl shadow-[0_4px_15px_rgb(160,0,21,0.2)] hover:shadow-[0_4px_20px_rgb(160,0,21,0.4)] transition-all hover:-translate-y-0.5">
                 Net Banking
               </Button>
 

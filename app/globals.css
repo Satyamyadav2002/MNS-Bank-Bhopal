@@ -12,38 +12,38 @@
   --card-foreground: #2B2D42;
   --popover: #FFFFFF;
   --popover-foreground: #2B2D42;
-  --primary: #C0001B;
+  --primary: #A00015;
   --primary-foreground: #FFFFFF;
   --secondary: #1C1C2E;
   --secondary-foreground: #FFFFFF;
   --muted: #F0F0F0;
   --muted-foreground: #6C757D;
-  --accent: #D4A017;
+  --accent: #E5B01A;
   --accent-foreground: #1C1C2E;
   --destructive: #DC2626;
   --destructive-foreground: #FFFFFF;
   --border: #E5E7EB;
   --input: #E5E7EB;
-  --ring: #C0001B;
-  --chart-1: #C0001B;
-  --chart-2: #D4A017;
+  --ring: #A00015;
+  --chart-1: #A00015;
+  --chart-2: #E5B01A;
   --chart-3: #28A745;
   --chart-4: #2B2D42;
   --chart-5: #6C757D;
   --radius: 0.75rem;
   --sidebar: #1C1C2E;
   --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #C0001B;
+  --sidebar-primary: #A00015;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #2B2D42;
   --sidebar-accent-foreground: #FFFFFF;
   --sidebar-border: #2B2D42;
-  --sidebar-ring: #C0001B;
+  --sidebar-ring: #A00015;
   
   /* Custom Bank Variables */
-  --bank-red: #C0001B;
-  --bank-red-dark: #8B0015;
-  --bank-gold: #D4A017;
+  --bank-red: #A00015;
+  --bank-red-dark: #6C000E;
+  --bank-gold: #E5B01A;
   --bank-cream: #FAF7F2;
   --bank-charcoal: #2B2D42;
   --bank-success: #28A745;
@@ -133,4 +133,24 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom Animations */
+@keyframes mesh {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.animate-mesh {
+  animation: mesh 20s ease-in-out infinite;
 }

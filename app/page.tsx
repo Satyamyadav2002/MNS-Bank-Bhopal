@@ -309,7 +309,7 @@ function QuickAssistance() {
   ]
   
   return (
-    <section className="py-16 bg-white">
+    <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#2B2D42] text-center mb-12">
           How Can We Help You?
@@ -318,8 +318,9 @@ function QuickAssistance() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {assistItems.map((item, i) => (
             <Link key={i} href={item.href}>
-              <Card className="group cursor-pointer border-2 border-transparent hover:border-[#C0001B] transition-all duration-200 hover:-translate-y-1.5 hover:shadow-xl h-full">
-                <CardContent className="p-6 text-center">
+              <Card className="group cursor-pointer border-0 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.1)] transition-all duration-300 hover:-translate-y-2 h-full bg-white/80 backdrop-blur-sm relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-white to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <CardContent className="p-6 text-center relative z-10 w-full">
                   <div className={cn(
                     "w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110",
                     item.color
@@ -375,7 +376,7 @@ function ProductsSection() {
   }
   
   return (
-    <section className="py-16 bg-[#FAF7F2]">
+    <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#2B2D42] text-center mb-8">
           {"Products You'll Love"}
@@ -388,10 +389,10 @@ function ProductsSection() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "px-6 py-3 rounded-lg font-medium transition-all",
+                "px-8 py-3 rounded-full font-medium transition-all duration-300",
                 activeTab === tab.id 
-                  ? "bg-[#C0001B] text-white shadow-lg" 
-                  : "bg-white text-[#2B2D42] hover:bg-gray-50"
+                  ? "bg-primary text-white shadow-[0_4px_15px_rgb(160,0,21,0.3)] transform scale-105" 
+                  : "bg-white/60 backdrop-blur-sm text-foreground hover:bg-white border border-transparent hover:border-gray-200 shadow-sm"
               )}
             >
               {tab.label}
@@ -403,13 +404,14 @@ function ProductsSection() {
         <div className="grid md:grid-cols-3 gap-6">
           {products[activeTab as keyof typeof products].map((product, i) => (
             <Link key={i} href={product.href}>
-              <Card className="group bg-white border-0 shadow-[0_4px_24px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 transition-all duration-200 rounded-[14px] overflow-hidden h-full">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-[#C0001B]/10 rounded-xl flex items-center justify-center mb-4">
-                    <product.icon className="w-6 h-6 text-[#C0001B]" />
+              <Card className="group bg-white/70 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] hover:-translate-y-2 transition-all duration-300 rounded-3xl overflow-hidden h-full relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <CardContent className="p-8 relative z-10 w-full">
+                  <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-primary/20 transition-all duration-300">
+                    <product.icon className="w-7 h-7 text-primary" />
                   </div>
-                  <h3 className="font-serif text-xl font-bold text-[#2B2D42] mb-2">{product.name}</h3>
-                  <p className="text-[#6C757D] text-sm mb-4">{product.desc}</p>
+                  <h3 className="font-serif text-2xl font-bold text-foreground mb-3">{product.name}</h3>
+                  <p className="text-muted-foreground text-sm mb-6 leading-relaxed">{product.desc}</p>
                   {product.rate && (
                     <div className="inline-flex items-center gap-1 bg-[#28A745]/10 text-[#28A745] px-3 py-1 rounded-full text-sm font-mono font-semibold mb-4">
                       {product.rate} {product.rate !== "Special" && "p.a."}
@@ -465,10 +467,11 @@ function InterestRatesWidget() {
           </p>
         </div>
         
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-8 relative z-10">
           {/* FD Rates Table */}
-          <Card className="bg-white/5 border-white/10 backdrop-blur">
-            <CardContent className="p-6">
+          <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+            <CardContent className="p-8 relative z-10">
               <h3 className="text-white font-semibold text-lg mb-4">Fixed Deposit Rates</h3>
               <div className="space-y-2">
                 <div className="grid grid-cols-3 gap-4 text-xs text-white/60 uppercase tracking-wider pb-2 border-b border-white/10">
@@ -487,7 +490,7 @@ function InterestRatesWidget() {
                     <div className="text-white text-sm flex items-center gap-2">
                       {rate.tenure}
                       {rate.highlight && (
-                        <span className="text-[10px] bg-[#D4A017] text-[#1C1C2E] px-2 py-0.5 rounded-full font-medium">
+                        <span className="text-[10px] bg-accent text-[#1C1C2E] px-2.5 py-0.5 rounded-full font-bold shadow-[0_0_10px_rgba(229,176,26,0.5)]">
                           BEST
                         </span>
                       )}
@@ -501,9 +504,13 @@ function InterestRatesWidget() {
           </Card>
           
           {/* FD Calculator */}
-          <Card className="bg-white/5 border-white/10 backdrop-blur">
-            <CardContent className="p-6">
-              <h3 className="text-white font-semibold text-lg mb-6">FD Calculator</h3>
+          <Card className="bg-white/5 border-white/10 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.3)] overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+            <CardContent className="p-8 relative z-10">
+              <h3 className="text-white font-semibold text-xl mb-6 flex items-center gap-2">
+                <Calculator className="w-5 h-5 text-accent" />
+                FD Calculator
+              </h3>
               <div className="space-y-4">
                 <div>
                   <label className="text-white/60 text-sm mb-2 block">Amount (Rs.)</label>
@@ -608,7 +615,7 @@ function DigitalServicesSection() {
   ]
   
   return (
-    <section className="py-16 bg-white">
+    <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#2B2D42] text-center mb-12">
           Bank From Anywhere
@@ -618,11 +625,12 @@ function DigitalServicesSection() {
           {services.map((service, i) => (
             <Card 
               key={i} 
-              className="group border-0 shadow-[0_4px_24px_rgba(0,0,0,0.08)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-200 rounded-[14px] overflow-hidden"
+              className="group border-0 bg-white/60 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] hover:-translate-y-2 transition-all duration-300 rounded-3xl overflow-hidden relative"
             >
-              <CardContent className="p-6 text-center">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+              <CardContent className="p-8 text-center relative z-10">
                 <div className={cn(
-                  "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 bg-gradient-to-br",
+                  "w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 bg-gradient-to-br shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-500",
                   service.gradient
                 )}>
                   <service.icon className="w-8 h-8 text-white" />
@@ -680,24 +688,29 @@ function WhyChooseUs() {
   ]
   
   return (
-    <section className="py-16 bg-[#FAF7F2] relative">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#2B2D42] text-center mb-12">
+    <section className="py-20 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="font-serif text-4xl lg:text-5xl font-bold text-foreground mb-4 tracking-tight">
           Why Bhopal Trusts Us
         </h2>
+        </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {pillars.map((pillar, i) => (
             <Card 
               key={i} 
-              className="bg-white border-0 shadow-[0_4px_24px_rgba(0,0,0,0.08)] hover:shadow-xl hover:-translate-y-1.5 transition-all duration-200 rounded-[14px]"
+              className="bg-white/70 backdrop-blur-md border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] hover:-translate-y-2 transition-all duration-300 rounded-[2rem] overflow-hidden group"
             >
-              <CardContent className="p-8 text-center">
-                <div className="w-20 h-20 bg-[#C0001B]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <pillar.icon className="w-10 h-10 text-[#C0001B]" />
+              <CardContent className="p-10 text-center relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative z-10">
+                  <div className="w-24 h-24 bg-primary/5 rounded-3xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 group-hover:bg-primary/10 transition-all duration-300 group-hover:rotate-3">
+                    <pillar.icon className="w-10 h-10 text-primary" />
+                  </div>
+                  <h3 className="font-bold text-xl text-foreground mb-3">{pillar.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{pillar.desc}</p>
                 </div>
-                <h3 className="font-semibold text-lg text-[#2B2D42] mb-2">{pillar.title}</h3>
-                <p className="text-[#6C757D] text-sm">{pillar.desc}</p>
               </CardContent>
             </Card>
           ))}
@@ -738,11 +751,13 @@ function NewsUpdates() {
   }
   
   return (
-    <section className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4">
-        <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#2B2D42] text-center mb-8">
+    <section className="py-24 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
+        <div className="text-center mb-16">
+          <h2 className="font-serif text-4xl lg:text-5xl font-bold text-foreground mb-4 tracking-tight">
           Latest from Mahanagar Bank
         </h2>
+        </div>
         
         {/* Tabs */}
         <div className="flex justify-center gap-2 mb-8 flex-wrap">
@@ -751,10 +766,10 @@ function NewsUpdates() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "px-5 py-2 rounded-full text-sm font-medium transition-all",
+                "px-8 py-3 rounded-full font-medium transition-all duration-300",
                 activeTab === tab.id 
-                  ? "bg-[#C0001B] text-white" 
-                  : "bg-gray-100 text-[#2B2D42] hover:bg-gray-200"
+                  ? "bg-primary text-white shadow-[0_4px_15px_rgb(160,0,21,0.3)] transform scale-105" 
+                  : "bg-muted/50 text-foreground hover:bg-muted border border-transparent hover:border-border shadow-sm"
               )}
             >
               {tab.label}
@@ -765,14 +780,14 @@ function NewsUpdates() {
         {/* News Cards */}
         <div className="grid md:grid-cols-3 gap-6">
           {news[activeTab as keyof typeof news].map((item, i) => (
-            <Card key={i} className="border border-gray-100 hover:shadow-lg transition-shadow rounded-[14px]">
-              <CardContent className="p-6">
-                <div className="inline-block bg-[#C0001B]/10 text-[#C0001B] text-xs font-medium px-3 py-1 rounded-full mb-3">
+            <Card key={i} className="group border border-border/40 hover:border-primary/20 shadow-[0_4px_20px_rgba(0,0,0,0.02)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-all duration-300 rounded-[2rem] hover:-translate-y-1 bg-white">
+              <CardContent className="p-8">
+                <div className="inline-block bg-primary/10 text-primary text-sm font-bold px-4 py-1.5 rounded-full mb-5 tracking-wide">
                   {item.date}
                 </div>
-                <h3 className="font-semibold text-[#2B2D42] mb-2">{item.title}</h3>
-                <p className="text-[#6C757D] text-sm mb-4">{item.excerpt}</p>
-                <button className="text-[#C0001B] text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all">
+                <h3 className="font-bold text-xl text-foreground mb-3 leading-tight group-hover:text-primary transition-colors">{item.title}</h3>
+                <p className="text-muted-foreground text-sm mb-6 leading-relaxed">{item.excerpt}</p>
+                <button className="text-primary text-sm font-bold flex items-center gap-2 hover:gap-3 transition-all">
                   Read More <ArrowRight className="w-4 h-4" />
                 </button>
               </CardContent>
@@ -810,7 +825,7 @@ function MemberTestimonials() {
   ]
   
   return (
-    <section className="py-16 bg-[#FFF5F5]">
+    <section className="py-20 relative z-10">
       <div className="max-w-7xl mx-auto px-4">
         <h2 className="font-serif text-3xl lg:text-4xl font-bold text-[#2B2D42] text-center mb-12">
           What Our Members Say
@@ -1019,8 +1034,16 @@ function Footer() {
 // =====================================================
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
-      <TopUtilityBar />
+    <div className="min-h-screen relative overflow-hidden bg-[#FAF7F2]/40">
+      {/* Dynamic Animated Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-[10%] -left-[10%] w-[60%] h-[60%] bg-primary/5 rounded-full blur-[120px] animate-mesh" />
+        <div className="absolute top-[40%] -right-[10%] w-[50%] h-[70%] bg-accent/5 rounded-full blur-[120px] animate-mesh" style={{ animationDelay: '-5s' }} />
+        <div className="absolute -bottom-[10%] left-[20%] w-[60%] h-[50%] bg-[#2B2D42]/5 rounded-full blur-[120px] animate-mesh" style={{ animationDelay: '-10s' }} />
+      </div>
+
+      <div className="relative z-10">
+        <TopUtilityBar />
       <StickyHeader />
       <AnnouncementTicker />
       <HeroSection />
@@ -1045,6 +1068,7 @@ export default function HomePage() {
           animation: marquee 30s linear infinite;
         }
       `}</style>
+      </div>
     </div>
   )
 }
