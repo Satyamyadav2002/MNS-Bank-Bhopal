@@ -1,6 +1,7 @@
 "use client"
 import { ShieldCheck, Facebook, Twitter, Linkedin, ExternalLink, MapPin, Phone, Mail, ArrowUp } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export function Footer() {
   const scrollToTop = () => {
@@ -20,11 +21,16 @@ export function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-4 lg:col-span-4">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-14 h-14 bg-gradient-to-br from-[#C0001B] to-[#8B0015] rounded-xl flex items-center justify-center shadow-[0_8px_24px_rgba(192,0,27,0.3)]">
-                <span className="font-serif text-3xl font-bold text-white leading-none">M</span>
+              <div className="bg-white rounded-xl px-3 py-2 shadow-[0_4px_16px_rgba(0,0,0,0.2)]">
+                <Image
+                  src="/mnslogo.jpeg"
+                  alt="MNS Bank Logo"
+                  width={200}
+                  height={55}
+                  className="h-10 w-auto object-contain"
+                />
               </div>
               <div className="flex flex-col">
-                <h3 className="font-serif font-bold text-xl leading-tight">Mahanagar Bank</h3>
                 <p className="font-serif italic text-[14px] text-[#F0C96A] tracking-wide mt-0.5">Your Trust. Our Responsibility.</p>
               </div>
             </div>

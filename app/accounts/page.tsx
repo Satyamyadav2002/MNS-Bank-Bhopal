@@ -2,6 +2,8 @@ import { Header } from "@/components/home/header"
 import { Footer } from "@/components/home/footer"
 import Link from "next/link"
 import { Wallet, Building2, ShieldCheck, Landmark, ChevronRight } from "lucide-react"
+import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
+import { SegmentSwitcher } from "@/components/home/segment-switcher"
 
 export default function AccountsIndexPage() {
   const accountCategories = [
@@ -13,6 +15,8 @@ export default function AccountsIndexPage() {
 
   return (
     <div className="min-h-screen bg-bank-cream flex flex-col font-sans">
+      <BankingSegmentProvider>
+      <SegmentSwitcher />
       <Header />
       
       <main className="flex-1 pt-32 pb-24">
@@ -44,6 +48,7 @@ export default function AccountsIndexPage() {
         </section>
       </main>
 
+      </BankingSegmentProvider>
       <Footer />
     </div>
   )

@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
@@ -80,13 +81,14 @@ export function Header() {
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-primary rounded-full">
-                <Building2 className="h-5 w-5 md:h-6 md:w-6 text-white" />
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-base md:text-lg font-bold text-foreground leading-tight">MNS Bank</h1>
-                <p className="text-xs text-muted-foreground">महानगर नागरिक सहकारी बैंक</p>
-              </div>
+              <Image
+                src="/mnslogo.jpeg"
+                alt="MNS Bank Logo"
+                width={180}
+                height={50}
+                className="h-10 md:h-12 w-auto object-contain mix-blend-multiply"
+                priority
+              />
             </Link>
 
             {/* Desktop Navigation */}
@@ -181,13 +183,13 @@ export function Header() {
                 <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                   <SheetTitle className="text-left">
                     <div className="flex items-center gap-3 mb-8">
-                      <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-full">
-                        <Building2 className="h-5 w-5 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-lg font-bold">MNS Bank</h2>
-                        <p className="text-xs text-muted-foreground">Bhopal</p>
-                      </div>
+                      <Image
+                        src="/mnslogo.jpeg"
+                        alt="MNS Bank Logo"
+                        width={160}
+                        height={45}
+                        className="h-10 w-auto object-contain"
+                      />
                     </div>
                   </SheetTitle>
                   <nav className="flex flex-col gap-4">

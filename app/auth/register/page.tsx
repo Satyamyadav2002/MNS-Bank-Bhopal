@@ -1,10 +1,14 @@
 import { Header } from "@/components/home/header"
 import { Footer } from "@/components/home/footer"
 import { Lock, User, ShieldCheck, Mail, Phone } from "lucide-react"
+import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
+import { SegmentSwitcher } from "@/components/home/segment-switcher"
 
 export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-bank-cream flex flex-col font-sans">
+      <BankingSegmentProvider>
+      <SegmentSwitcher />
       <Header />
       
       <main className="flex-1 flex flex-col items-center justify-center relative py-20 z-10 w-full overflow-hidden">
@@ -103,6 +107,7 @@ export default function RegisterPage() {
         </div>
       </main>
       
+      </BankingSegmentProvider>
       <Footer />
     </div>
   )

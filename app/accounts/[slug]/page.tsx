@@ -6,6 +6,8 @@ import { MobileNav } from "@/components/home/mobile-nav"
 import { ArrowRight, CheckCircle2, Send, Download, ShieldCheck, Wallet, FileText, Landmark, Shield, PiggyBank, Briefcase, Users, Star } from "lucide-react"
 import { useState, use } from "react"
 import Link from "next/link"
+import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
+import { SegmentSwitcher } from "@/components/home/segment-switcher"
 
 const accountData: Record<string, any> = {
   "savings-account": {
@@ -117,6 +119,8 @@ export default function AccountPage({ params }: { params: Promise<{ slug: string
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] flex flex-col font-sans">
+      <BankingSegmentProvider>
+      <SegmentSwitcher />
       <UtilityBar />
       <Header />
       
@@ -366,6 +370,7 @@ export default function AccountPage({ params }: { params: Promise<{ slug: string
 
       <Footer />
       <MobileNav />
+      </BankingSegmentProvider>
     </div>
   )
 }

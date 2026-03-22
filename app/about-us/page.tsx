@@ -5,6 +5,8 @@ import { UtilityBar } from "@/components/home/utility-bar"
 import { MobileNav } from "@/components/home/mobile-nav"
 import { Shield, Users, Landmark, Trophy, Target, Eye, Heart, Award, ArrowRight, Calendar, MapPin, CheckCircle2, Handshake, Star } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
+import { SegmentSwitcher } from "@/components/home/segment-switcher"
 
 function AnimatedNumber({ end, suffix = "" }: { end: number; suffix?: string }) {
   const [count, setCount] = useState(0)
@@ -89,6 +91,8 @@ export default function AboutUsPage() {
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] flex flex-col font-sans">
+      <BankingSegmentProvider>
+      <SegmentSwitcher />
       <UtilityBar />
       <Header />
       
@@ -342,6 +346,7 @@ export default function AboutUsPage() {
 
       <Footer />
       <MobileNav />
+      </BankingSegmentProvider>
     </div>
   )
 }

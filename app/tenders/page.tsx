@@ -1,10 +1,14 @@
 import { Header } from "@/components/home/header"
 import { Footer } from "@/components/home/footer"
 import { FileDown, Calendar, ArrowRight } from "lucide-react"
+import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
+import { SegmentSwitcher } from "@/components/home/segment-switcher"
 
 export default function TendersPage() {
   return (
     <div className="min-h-screen bg-bank-cream flex flex-col font-sans">
+      <BankingSegmentProvider>
+      <SegmentSwitcher />
       <Header />
       
       <main className="flex-1 pt-32 pb-24">
@@ -83,6 +87,7 @@ export default function TendersPage() {
         </section>
       </main>
 
+      </BankingSegmentProvider>
       <Footer />
     </div>
   )

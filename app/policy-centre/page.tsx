@@ -1,6 +1,8 @@
 import { Header } from "@/components/home/header"
 import { Footer } from "@/components/home/footer"
 import { FileText, Download, ShieldAlert, Scale, Handshake } from "lucide-react"
+import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
+import { SegmentSwitcher } from "@/components/home/segment-switcher"
 
 export default function PolicyCentrePage() {
   const policies = [
@@ -36,6 +38,8 @@ export default function PolicyCentrePage() {
 
   return (
     <div className="min-h-screen bg-bank-cream flex flex-col font-sans">
+      <BankingSegmentProvider>
+      <SegmentSwitcher />
       <Header />
       
       <main className="flex-1 pt-32 pb-24">
@@ -99,6 +103,7 @@ export default function PolicyCentrePage() {
         </section>
       </main>
 
+      </BankingSegmentProvider>
       <Footer />
     </div>
   )

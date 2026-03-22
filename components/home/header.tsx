@@ -1,11 +1,14 @@
 "use client"
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Menu, X, ChevronDown, ArrowRight, Home, Car, Building2, UserCircle, Briefcase, Landmark, ShieldCheck, Wallet, PiggyBank, Percent, ArrowUpRight, MapPin, Calculator, Download, PhoneCall, Building, FileText, Info } from "lucide-react"
+import Image from "next/image"
+import { Menu, X, ChevronDown, ArrowRight, Home, Car, Building2, UserCircle, Briefcase, Landmark, ShieldCheck, Wallet, PiggyBank, Percent, ArrowUpRight, MapPin, Calculator, Download, PhoneCall, Building, FileText, Info, Factory, Banknote, HandCoins, TrendingUp, Layers, CircleDollarSign, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useBankingSegment } from "./banking-segment-context"
 
-const megaMenuData = {
+// ─── Personal Banking Menu Data ──────────────────────────────────────────
+const personalMenuData = {
   Loans: {
     featured: {
       tag: "✨ Special This Month",
@@ -18,7 +21,7 @@ const megaMenuData = {
       { icon: Home, title: "Home Loans", href: "/loans/home-loans", desc: "Build your dream home" },
       { icon: Car, title: "Vehicle Loans", href: "/loans/vehicle-loans", desc: "Drive your dream car" },
       { icon: UserCircle, title: "Personal Loans", href: "/loans/personal-loans", desc: "For all your needs" },
-      { icon: Briefcase, title: "Business Loans", href: "/loans/business-loans", desc: "Grow your enterprise" }
+      { icon: Banknote, title: "Gold Loans", href: "/loans/gold-loans", desc: "Quick loan against gold" }
     ],
     allLink: "View all loan products",
     allHref: "/loans"
@@ -93,10 +96,73 @@ const megaMenuData = {
   }
 }
 
+// ─── Business Banking Menu Data ──────────────────────────────────────────
+const businessMenuData = {
+  Loans: {
+    featured: {
+      tag: "💼 For Enterprises",
+      title: "MSME Loan @ 9.50%",
+      desc: "Quick disbursement with minimal documentation.",
+      cta: "Apply Now",
+      href: "/loans/business-loans"
+    },
+    products: [
+      { icon: Briefcase, title: "Business Loans", href: "/loans/business-loans", desc: "Grow your enterprise" },
+      { icon: Factory, title: "MSME Loans", href: "/loans/msme-loans", desc: "For micro & small units" },
+      { icon: TrendingUp, title: "Working Capital", href: "/loans/working-capital", desc: "Fuel daily operations" },
+      { icon: CircleDollarSign, title: "Overdraft Facility", href: "/loans/overdraft", desc: "Flexible credit line" }
+    ],
+    allLink: "View all business loans",
+    allHref: "/loans"
+  },
+  Accounts: {
+    featured: {
+      tag: "🏢 For Business",
+      title: "Business Current A/c",
+      desc: "High transaction limits with premium benefits.",
+      cta: "Open Account",
+      href: "/accounts/current-account"
+    },
+    products: [
+      { icon: Building2, title: "Current Account", href: "/accounts/current-account", desc: "High-volume transactions" },
+      { icon: HandCoins, title: "Cash Credit Account", href: "/accounts/cash-credit", desc: "Credit against security" },
+      { icon: Layers, title: "OD Account", href: "/accounts/overdraft", desc: "Overdraft facility" },
+      { icon: Landmark, title: "Partnership Account", href: "/accounts/partnership", desc: "For firms & partners" }
+    ],
+    allLink: "View all business accounts",
+    allHref: "/accounts"
+  },
+  Deposits: {
+    featured: {
+      tag: "📈 Institutional",
+      title: "Corporate FD",
+      desc: "Competitive rates for institutional deposits.",
+      cta: "Start Investing",
+      href: "/deposits/fixed-deposits"
+    },
+    products: [
+      { icon: Percent, title: "Fixed Deposits", href: "/deposits/fixed-deposits", desc: "Assured returns for firms" },
+      { icon: ArrowUpRight, title: "Flexi Deposits", href: "/deposits/flexi-deposits", desc: "Withdraw anytime" },
+      { icon: ShieldCheck, title: "Institutional FD", href: "/deposits/institutional-fd", desc: "For corporates & trusts" },
+      { icon: PiggyBank, title: "Recurring Deposits", href: "/deposits/recurring-deposits", desc: "Systematic savings" }
+    ],
+    allLink: "View all deposit options",
+    allHref: "/deposits"
+  },
+  // Services & About are shared across segments
+  Services: personalMenuData.Services,
+  About: personalMenuData.About
+}
+
+type MenuDataType = typeof personalMenuData
+
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [language, setLanguage] = useState<'EN' | 'HI'>('EN')
+  const { segment } = useBankingSegment()
+  
+  const megaMenuData: MenuDataType = segment === "personal" ? personalMenuData : businessMenuData
   
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -117,18 +183,15 @@ export function Header() {
     )}>
       <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
         
-        <Link href="/" className="flex items-center gap-3 relative z-50 group">
-          <div className="w-12 h-12 bg-gradient-to-br from-[#C0001B] to-[#8B0015] rounded-xl flex items-center justify-center shadow-[0_4px_16px_rgba(192,0,27,0.25)] group-hover:shadow-[0_6px_24px_rgba(192,0,27,0.35)] group-hover:scale-105 transition-all duration-300">
-            <span className="font-serif text-2xl font-bold text-white leading-none">M</span>
-          </div>
-          <div>
-            <h1 className="font-serif text-xl font-bold text-bank-charcoal leading-tight flex items-center">
-              Mahanagar Bank
-            </h1>
-            <p className="font-devanagari text-[11px] font-medium text-bank-muted tracking-wide mt-0.5">
-              महानगर नागरिक सहकारी बैंक
-            </p>
-          </div>
+        <Link href="/" className="flex items-center relative z-50 group">
+          <Image
+            src="/mnslogo.jpeg"
+            alt="MNS Bank Logo"
+            width={200}
+            height={55}
+            className="h-12 w-auto object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
+            priority
+          />
         </Link>
         
         <nav className="hidden lg:flex items-center justify-center absolute left-1/2 -translate-x-1/2 h-full">

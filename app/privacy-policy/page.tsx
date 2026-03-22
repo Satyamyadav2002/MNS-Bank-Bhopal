@@ -1,9 +1,13 @@
 import { Header } from "@/components/home/header"
 import { Footer } from "@/components/home/footer"
+import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
+import { SegmentSwitcher } from "@/components/home/segment-switcher"
 
 export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-bank-cream flex flex-col font-sans">
+      <BankingSegmentProvider>
+      <SegmentSwitcher />
       <Header />
       
       <main className="flex-1 pt-32 pb-24">
@@ -72,6 +76,7 @@ export default function PrivacyPolicyPage() {
         </section>
       </main>
 
+      </BankingSegmentProvider>
       <Footer />
     </div>
   )

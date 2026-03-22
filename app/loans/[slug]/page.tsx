@@ -6,6 +6,8 @@ import { MobileNav } from "@/components/home/mobile-nav"
 import { ArrowRight, CheckCircle2, FileText, Send, Calculator, Download, Home, Car, Percent, ArrowUpRight, ShieldCheck, Clock, Shield } from "lucide-react"
 import { useState, use, useEffect, useRef } from "react"
 import Link from "next/link"
+import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
+import { SegmentSwitcher } from "@/components/home/segment-switcher"
 
 // Animated Number Component
 function AnimatedNumber({ end, prefix = "", suffix = "", decimals = 0 }: { end: number, prefix?: string, suffix?: string, decimals?: number }) {
@@ -115,6 +117,8 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] flex flex-col font-sans">
+      <BankingSegmentProvider>
+      <SegmentSwitcher />
       <UtilityBar />
       <Header />
       
@@ -425,6 +429,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
 
       <Footer />
       <MobileNav />
+      </BankingSegmentProvider>
     </div>
   )
 }
