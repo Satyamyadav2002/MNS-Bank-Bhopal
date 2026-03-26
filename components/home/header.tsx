@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -219,8 +219,40 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeMenu, setActiveMenu] = useState<NavKey | null>(null)
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null)
+  const [darkMode, setDarkMode] = useState(false)
+  const [fontSize, setFontSize] = useState<"normal" | "large" | "x-large">("normal")
+  const [showNotif, setShowNotif] = useState(false)
+  const notifRef = useRef<HTMLDivElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const { segment, setSegment } = useBankingSegment()
+
+  const toggleDark = useCallback(() => {
+    setDarkMode(prev => {
+      const next = !prev
+      document.documentElement.classList.toggle("dark", next)
+      return next
+    })
+  }, [])
+
+  const cycleFont = useCallback(() => {
+    setFontSize(prev => {
+      const next = prev === "normal" ? "large" : prev === "large" ? "x-large" : "normal"
+      const sizeMap = { normal: "16px", large: "18px", "x-large": "20px" }
+      document.documentElement.style.fontSize = sizeMap[next]
+      return next
+    })
+  }, [])
+
+  // Close notification dropdown on outside click
+  useEffect(() => {
+    function handleNotifOutside(e: MouseEvent) {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotif(false)
+      }
+    }
+    document.addEventListener("mousedown", handleNotifOutside)
+    return () => document.removeEventListener("mousedown", handleNotifOutside)
+  }, [])
 
   const navKeys = Object.keys(megaMenuData[segment as SegmentKey]) as NavKey[]
   const currentMenu = megaMenuData[segment as SegmentKey]
@@ -285,13 +317,74 @@ export function Header() {
               <div className="flex items-center gap-4 pb-2 text-white/90 text-xs md:text-sm shrink-0 pr-2">
                 <Link href="/about-us" className="hover:text-white hidden transition-colors xl:block">About Us</Link>
                 <div className="flex items-center gap-3.5">
-                  <MapPin className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
-                  <MessageCircle className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
+                  {/* Locate Us */}
+                  <Link href="/locate-us" title="Locate Branch" className="hover:text-white transition-colors">
+                    <MapPin className="h-4 w-4" />
+                  </Link>
+                  {/* Feedback */}
+                  <Link href="/feedback" title="Share Feedback" className="hover:text-white transition-colors">
+                    <MessageCircle className="h-4 w-4" />
+                  </Link>
                   <div className="hidden md:flex items-center gap-3.5 border-l border-white/30 pl-3.5">
-                    <Sun className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
-                    <Moon className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
-                    <Type className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
-                    <Bell className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
+                    {/* Dark / Light toggle */}
+                    <button
+                      title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                      onClick={toggleDark}
+                      className="hover:text-white transition-colors"
+                    >
+                      {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                    </button>
+                    {/* Font size */}
+                    <button
+                      title={`Text Size: ${fontSize} (click to change)`}
+                      onClick={cycleFont}
+                      className="relative hover:text-white transition-colors"
+                    >
+                      <Type className="h-4 w-4" />
+                      {fontSize !== "normal" && (
+                        <span className="absolute -top-1.5 -right-1.5 text-[8px] font-bold bg-yellow-400 text-[#C0001B] rounded-full w-3 h-3 flex items-center justify-center">
+                          {fontSize === "large" ? "A" : "A+"}
+                        </span>
+                      )}
+                    </button>
+                    {/* Notifications */}
+                    <div className="relative" ref={notifRef}>
+                      <button
+                        title="Announcements"
+                        onClick={() => setShowNotif(v => !v)}
+                        className="relative hover:text-white transition-colors"
+                      >
+                        <Bell className="h-4 w-4" />
+                        <span className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full" />
+                      </button>
+                      {showNotif && (
+                        <div className="absolute right-0 top-7 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 z-[200] overflow-hidden">
+                          <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+                            <span className="text-xs font-bold text-gray-700 uppercase tracking-widest">Announcements</span>
+                            <button onClick={() => setShowNotif(false)} className="text-gray-400 hover:text-gray-700 text-xs">✕</button>
+                          </div>
+                          <ul className="divide-y divide-gray-50">
+                            {[
+                              { title: "Special FD Rate", desc: "1-Year FD now at 7.00% p.a. Limited period offer.", time: "Today", href: "/time-deposit" },
+                              { title: "DICGC Insurance", desc: "Your deposits are insured up to ₹5,00,000 by Govt. of India.", time: "26 Mar", href: "/deposits" },
+                            ].map(n => (
+                              <li key={n.title}>
+                                <Link href={n.href} onClick={() => setShowNotif(false)}
+                                  className="flex flex-col gap-0.5 px-4 py-3 hover:bg-[#FFF5F6] transition-colors">
+                                  <span className="text-sm font-semibold text-gray-800">{n.title}</span>
+                                  <span className="text-xs text-gray-500 leading-relaxed">{n.desc}</span>
+                                  <span className="text-[10px] text-gray-400 mt-0.5">{n.time}</span>
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="px-4 py-2.5 border-t border-gray-100">
+                            <Link href="/announcements" onClick={() => setShowNotif(false)}
+                              className="text-xs font-bold text-[#C0001B] hover:underline">View all announcements →</Link>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
