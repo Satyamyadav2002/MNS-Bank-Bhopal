@@ -5,7 +5,6 @@ import { QuickApply } from "@/components/home/quick-apply"
 import { TrustBar } from "@/components/home/trust-bar"
 import { ProductsSection } from "@/components/home/products-section"
 import { InterestRatesWidget } from "@/components/home/interest-rates"
-import { DigitalServicesSection } from "@/components/home/digital-services"
 import { MobileAppSection } from "@/components/home/mobile-app-section"
 import { WhyChooseUs } from "@/components/home/why-choose-us"
 import { Testimonials } from "@/components/home/testimonials"
@@ -30,7 +29,6 @@ export default function HomePage() {
         <main>
           <section id="products"><ProductsSection /></section>
           <section id="calculator"><InterestRatesWidget /></section>
-          <section id="digital"><DigitalServicesSection /></section>
           <section id="mobileapp"><MobileAppSection /></section>
           <section id="whyus"><WhyChooseUs /></section>
           <section id="testimonials"><Testimonials /></section>

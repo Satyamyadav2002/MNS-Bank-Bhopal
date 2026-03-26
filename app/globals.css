@@ -40,6 +40,92 @@
   --bank-muted: #6B7280;
 }
 
+/* ========================================
+   DARK MODE — Variable Overrides
+   ======================================== */
+.dark {
+  --background: #111118;
+  --foreground: #E5E5E5;
+  --card: #1A1A24;
+  --card-foreground: #E5E5E5;
+  --popover: #1A1A24;
+  --popover-foreground: #E5E5E5;
+  --primary: #E5293E;
+  --primary-foreground: #FFFFFF;
+  --secondary: #252535;
+  --secondary-foreground: #E5E5E5;
+  --muted: #252535;
+  --muted-foreground: #9CA3AF;
+  --accent: #E5293E;
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: #2A2A3A;
+  --input: #2A2A3A;
+  --ring: #E5293E;
+  --bank-cream: #111118;
+  --bank-cream-edge: #161622;
+  --bank-charcoal: #E5E5E5;
+  --bank-dark: #0D0D14;
+  --bank-muted: #9CA3AF;
+  color-scheme: dark;
+}
+
+/* ========================================
+   DARK MODE — Global Element Overrides
+   ======================================== */
+.dark body,
+.dark .min-h-screen {
+  background-color: #111118 !important;
+  color: #E5E5E5;
+}
+
+/* Backgrounds */
+.dark .bg-white { background-color: #1A1A24 !important; }
+.dark .bg-gray-50 { background-color: #151520 !important; }
+.dark .bg-gray-100 { background-color: #1E1E2A !important; }
+.dark .bg-\[\#FFF5F6\] { background-color: #1E1520 !important; }
+.dark .bg-\[\#FFF0F2\] { background-color: #1E1520 !important; }
+
+/* Text colors */
+.dark .text-gray-900 { color: #F0F0F0 !important; }
+.dark .text-gray-800 { color: #E0E0E0 !important; }
+.dark .text-gray-700 { color: #D0D0D0 !important; }
+.dark .text-gray-600 { color: #B0B0B0 !important; }
+.dark .text-gray-500 { color: #9CA3AF !important; }
+.dark .text-gray-400 { color: #7B8290 !important; }
+
+/* Borders */
+.dark .border-gray-100 { border-color: #2A2A3A !important; }
+.dark .border-gray-200 { border-color: #2A2A3A !important; }
+
+/* Header & Footer */
+.dark .bg-gray-900 { background-color: #0D0D14 !important; }
+.dark .bg-white\/90,
+.dark .bg-white\/80 { background-color: rgba(26, 26, 36, 0.9) !important; }
+.dark .bg-white\/50 { background-color: rgba(26, 26, 36, 0.5) !important; }
+
+/* Cards & Sections */
+.dark .shadow-sm { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important; }
+.dark .shadow-lg { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important; }
+.dark .shadow-md { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important; }
+
+/* Gradient overrides for hero-like regions */
+.dark .from-\[\#FFF5F6\] { --tw-gradient-from: #1E1520 !important; }
+.dark .to-\[\#FFF0F2\] { --tw-gradient-to: #1E1520 !important; }
+
+/* PageShell hero banner */
+.dark [class*="from-\[#FFF5F6\]"][class*="via-white"][class*="to-\[#FFF0F2\]"] {
+  background: linear-gradient(135deg, #1A1520, #151520, #1A1520) !important;
+}
+
+/* Smooth transition for dark mode toggle */
+* {
+  transition-property: background-color, border-color, color;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+}
+
 @theme inline {
   --font-sans: 'DM Sans', sans-serif;
   --font-serif: 'Playfair Display', serif;
