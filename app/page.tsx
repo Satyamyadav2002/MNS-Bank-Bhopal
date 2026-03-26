@@ -14,6 +14,8 @@ import { Footer } from "@/components/home/footer"
 import { MobileNav } from "@/components/home/mobile-nav"
 import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
 import { SegmentSwitcher } from "@/components/home/segment-switcher"
+import { FraudAwarenessBanner } from "@/components/home/fraud-awareness-banner"
+import { FloatingRateWidget } from "@/components/home/floating-rate-widget"
 
 export default function HomePage() {
   return (
@@ -22,6 +24,7 @@ export default function HomePage() {
         <SegmentSwitcher />
         <UtilityBar />
         <Header />
+        <FraudAwarenessBanner />
         <HeroSection />
         <QuickApply />
         <TrustBar />
@@ -38,8 +41,10 @@ export default function HomePage() {
         
         <Footer />
         <MobileNav />
+        <FloatingRateWidget />
       </div>
     </BankingSegmentProvider>
   )
 }
+
 

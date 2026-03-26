@@ -173,6 +173,7 @@ const megaMenuData = {
             { label: "Transport Loan", href: "/transport-loan", desc: "Commercial vehicle finance" },
             { label: "Professional Loan", href: "/professional-loan", desc: "For doctors, CAs & professionals" },
             { label: "Micro Finance", href: "/micro-finance", desc: "SHG / JLG lending" },
+            { label: "Self Employed Loan", href: "/self-employed-loan", desc: "For traders & freelancers" },
           ]
         }
       ],
