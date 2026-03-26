@@ -75,8 +75,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`${playfair.variable} ${dmSans.variable} ${notoDevanagari.variable} ${dmMono.variable} font-sans antialiased text-bank-charcoal mesh-bg selection:bg-bank-red/20 selection:text-bank-red-dark`}>
+    <html lang="en" suppressHydrationWarning>
+      <body suppressHydrationWarning className={`${playfair.variable} ${dmSans.variable} ${notoDevanagari.variable} ${dmMono.variable} font-sans antialiased text-bank-charcoal mesh-bg selection:bg-bank-red/20 selection:text-bank-red-dark`}>
         <div className="bg-noise min-h-screen flex flex-col relative w-full overflow-x-hidden">
           {children}
         </div>

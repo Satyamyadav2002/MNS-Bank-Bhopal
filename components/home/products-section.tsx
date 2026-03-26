@@ -1,120 +1,123 @@
 "use client"
 import { useState } from "react"
-import { ArrowRight, Wallet, PiggyBank, Smartphone, Building2, CreditCard, Lock, Star, Monitor } from "lucide-react"
+import { ArrowRight, PiggyBank, Landmark, Home, Users, Car, GraduationCap, CreditCard, Monitor, Smartphone, Repeat, Coins, Building2 } from "lucide-react"
+import Link from "next/link"
+
+const tabs = [
+  {
+    id: "accounts",
+    label: "Accounts",
+    products: [
+      { name: "Savings Account", desc: "Earn up to 6% interest with zero minimum balance requirement.", rate: "6.00% p.a.", href: "/savings-account", icon: PiggyBank },
+      { name: "Current Account", desc: "High-volume transaction account for businesses and traders.", rate: null, href: "/current-account", icon: Building2 },
+      { name: "Safe Deposit Locker", desc: "Secure your valuables and important documents safely.", rate: null, href: "/services/locker", icon: Landmark },
+    ]
+  },
+  {
+    id: "deposits",
+    label: "Deposits",
+    products: [
+      { name: "Time Deposit (FD)", desc: "Fixed deposit with guaranteed high returns and flexible payout.", rate: "7.00% p.a.", href: "/time-deposit", icon: Landmark, hot: true },
+      { name: "Recurring Deposit", desc: "Build wealth systematically with small monthly deposits.", rate: "6.50% p.a.", href: "/recurring-deposit", icon: Repeat },
+      { name: "Double Deposit", desc: "Our flagship scheme designed to double your money in record time.", rate: "Special Rate", href: "/double-deposit", icon: Coins },
+    ]
+  },
+  {
+    id: "loans",
+    label: "Loans",
+    products: [
+      { name: "Gold Loan", desc: "Quick approval with minimal documentation against gold jewellery.", rate: "From 9.00%", href: "/gold-loan", icon: Coins, hot: true },
+      { name: "Home Loan", desc: "Make your dream home a reality with affordable long-tenure EMIs.", rate: "From 8.50%", href: "/home-loan", icon: Home },
+      { name: "Personal Loan", desc: "Instant personal finance for any of your life needs.", rate: "From 12.00%", href: "/personal-loan", icon: Users },
+      { name: "Car Loan", desc: "Drive your dream car with up to 100% on-road funding.", rate: "From 9.50%", href: "/car-loan", icon: Car },
+      { name: "Education Loan", desc: "Invest in your future with a loan for higher education.", rate: "From 10.00%", href: "/education-loan", icon: GraduationCap },
+      { name: "Working Capital", desc: "Keep your business operations running smoothly.", rate: "From 13.00%", href: "/working-capital-loan", icon: Building2 },
+    ]
+  },
+  {
+    id: "digital",
+    label: "Digital Services",
+    products: [
+      { name: "Net Banking", desc: "Access and manage your account securely from anywhere online.", rate: null, href: "/net-banking", icon: Monitor },
+      { name: "Mobile Banking", desc: "Full banking in your pocket with the MNS Bank secure app.", rate: null, href: "/mobile-banking", icon: Smartphone },
+      { name: "UPI / QR Payments", desc: "Instant, real-time money transfers 24×7 via UPI.", rate: null, href: "/upi-qr", icon: CreditCard },
+    ]
+  },
+]
 
 export function ProductsSection() {
-  const [activeTab, setActiveTab] = useState("Accounts")
-  
-  const tabs = ["Accounts", "Loans", "Deposits", "Services"]
-  
-  const products = {
-    Accounts: [
-      { name: "Savings Account", desc: "Earn competitive interest on your daily savings with auto-sweep facility.", rate: "6.00% p.a.", icon: PiggyBank, theme: "red", ribbon: "Most Popular", ribbonColor: "red" },
-      { name: "Current Account", desc: "Specially designed for businesses and traders with high transaction volume.", rate: null, icon: Wallet, theme: "red" },
-      { name: "Digital Account", desc: "Open an account online instantly from home with Video KYC.", rate: null, icon: Smartphone, theme: "red" },
-    ],
-    Loans: [
-      { name: "Home Loan", desc: "Make your dream home a reality with long tenure and easy EMIs.", rate: "From 8.50%", icon: Building2, theme: "green" },
-      { name: "Gold Loan", desc: "Quick approval, minimal documentation for your urgent needs.", rate: "From 9.00%", icon: Star, theme: "green" },
-      { name: "Car Loan", desc: "Drive home your dream car with up to 100% on-road funding.", rate: "From 9.50%", icon: CreditCard, theme: "green" },
-    ],
-    Deposits: [
-      { name: "1-Year Special FD", desc: "Guaranteed high returns with flexible payout options.", rate: "7.00% p.a.", icon: Lock, theme: "gold", ribbon: "Best Rate", ribbonColor: "gold" },
-      { name: "Recurring Deposit", desc: "Build wealth systematically with small monthly deposits.", rate: "Up to 6.50%", icon: PiggyBank, theme: "gold" },
-      { name: "Double Deposit", desc: "Our flagship scheme to double your money in record time.", rate: "Special Rate", icon: Star, theme: "gold" },
-    ],
-    Services: [
-      { name: "Net Banking", desc: "Manage your finances from anywhere, anytime.", rate: null, icon: Monitor, theme: "charcoal" },
-      { name: "Mobile App", desc: "Bank in your pocket with the Mahanagar secure app.", rate: null, icon: Smartphone, theme: "charcoal" },
-      { name: "UPI Payments", desc: "Instant, real-time money transfers 24x7.", rate: null, icon: CreditCard, theme: "charcoal" },
-    ],
-  }
-
-  const getIconThemeClasses = (theme: string) => {
-    switch(theme) {
-      case "red": return "bg-gradient-to-br from-[#C0001B]/12 to-[#C0001B]/5 text-[#C0001B]";
-      case "gold": return "bg-gradient-to-br from-[#C9922A]/15 to-[#C9922A]/5 text-[#A87820]";
-      case "green": return "bg-gradient-to-br from-emerald-500/12 to-emerald-500/5 text-emerald-600";
-      case "charcoal": return "bg-gradient-to-br from-[#2B2D42]/10 to-[#2B2D42]/5 text-[#2B2D42]";
-      default: return "bg-[#FAF6EF] text-[#2B2D42]";
-    }
-  }
+  const [activeTab, setActiveTab] = useState("accounts")
+  const current = tabs.find(t => t.id === activeTab)!
 
   return (
-    <section className="py-28 bg-white relative overflow-hidden text-center sm:text-left z-10">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-[#C9922A]/[0.03] to-transparent rounded-full blur-[80px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-[#C0001B]/[0.02] to-transparent rounded-full blur-[80px] pointer-events-none" />
-      
-      <div className="max-w-7xl mx-auto px-4 relative z-10 w-full">
-        <div className="flex flex-col items-center mb-14">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[#C9922A]/40" />
-            <span className="eyebrow-label border-0 pl-0">OUR OFFERINGS</span>
-            <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[#C9922A]/40" />
-          </div>
-          <h2 className="font-serif text-4xl lg:text-[48px] font-bold text-[#2B2D42] text-center leading-tight">
-            Products You&apos;ll Love
-          </h2>
-        </div>
-        
-        {/* Premium Tab Selector with sliding indicator */}
-        <div className="flex justify-center flex-wrap gap-2 mb-16 relative">
-          <div className="flex bg-[#FAF6EF]/80 rounded-full p-1.5 border border-[#E5E0D8]/50 backdrop-blur-sm">
-            {tabs.map((tab) => (
+    <section className="bg-white relative z-10">
+
+      {/* Sticky Axis-style dark-red product sub-nav */}
+      <div className="sticky top-[108px] z-40 bg-[#C0001B] shadow-[0_4px_20px_rgba(192,0,27,0.2)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex overflow-x-auto scrollbar-hide">
+            {tabs.map(tab => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-8 py-3 rounded-full font-bold transition-all duration-400 text-sm tracking-wide relative z-10 ${
-                  activeTab === tab 
-                    ? "bg-[#2B2D42] text-white shadow-[0_4px_16px_rgba(43,45,66,0.25)]" 
-                    : "text-[#6B7280] hover:text-[#2B2D42]"
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-6 py-4 text-sm font-semibold whitespace-nowrap transition-all border-b-2 flex-shrink-0 ${
+                  activeTab === tab.id
+                    ? "text-white border-white"
+                    : "text-white/70 border-transparent hover:text-white hover:border-white/40"
                 }`}
               >
-                {tab}
+                {tab.label}
               </button>
             ))}
           </div>
         </div>
-        
-        <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {products[activeTab as keyof typeof products].map((product, i) => (
-            <div key={`${activeTab}-${i}`} className="group relative bg-white/90 backdrop-blur-sm rounded-[22px] border border-[#E5E0D8] p-8 premium-card overflow-hidden flex flex-col h-full text-left z-10 hover:border-[#C9922A]/40">
-              
-              {/* Premium Bottom Gradient Bar */}
-              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-[#C0001B] via-[#C9922A] to-[#F0C96A] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      </div>
 
-              {/* Ribbons */}
-              {product.ribbon && (
-                <div className="absolute -top-1 -right-1 overflow-hidden w-28 h-28 z-20">
-                  <div className={`absolute top-6 -right-8 w-40 text-center text-[10px] font-bold uppercase tracking-wider py-1.5 shadow-md transform rotate-45 ${
-                    product.ribbonColor === "red" ? "bg-gradient-to-r from-[#C0001B] to-[#8B0015] text-white" : "bg-gradient-to-r from-[#C9922A] to-[#A87820] text-white"
-                  }`}>
-                    {product.ribbon}
-                  </div>
+      {/* Product Cards */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="flex items-center justify-between mb-10">
+          <div>
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[#C0001B]">Our Offerings</span>
+            <h2 className="text-3xl font-bold text-gray-900 mt-1">{current.label}</h2>
+          </div>
+          <Link href={`/${current.id}`} className="hidden sm:flex items-center gap-2 text-sm font-bold text-[#C0001B] hover:gap-3 transition-all">
+            Explore all {current.label} <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {current.products.map((product) => (
+            <Link
+              key={product.name}
+              href={product.href}
+              className="group bg-white border border-gray-100 rounded-2xl p-6 hover:border-[#C0001B]/30 hover:shadow-[0_8px_32px_rgba(192,0,27,0.08)] transition-all relative overflow-hidden"
+            >
+              {/* Hot badge */}
+              {"hot" in product && product.hot && (
+                <div className="absolute top-4 right-4 bg-[#C0001B] text-white text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-full">
+                  Popular
                 </div>
               )}
 
-              <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-400 group-hover:scale-110 group-hover:shadow-lg ${getIconThemeClasses(product.theme)}`}>
-                <product.icon className="w-8 h-8" />
+              {/* Bottom accent line on hover */}
+              <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#C0001B] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+
+              <div className="w-12 h-12 rounded-xl bg-[#C0001B]/8 flex items-center justify-center mb-5 group-hover:bg-[#C0001B] transition-colors duration-300">
+                <product.icon className="w-6 h-6 text-[#C0001B] group-hover:text-white transition-colors duration-300" />
               </div>
-              
-              <h3 className="font-serif text-[22px] font-bold text-[#2B2D42] mb-3">{product.name}</h3>
-              <p className="text-[#6B7280] leading-relaxed mb-8 flex-1 text-[15px]">{product.desc}</p>
-              
-              <div className="mt-auto relative">
+
+              <h3 className="text-[17px] font-bold text-gray-900 mb-2">{product.name}</h3>
+              <p className="text-sm text-gray-500 leading-relaxed flex-1 mb-5">{product.desc}</p>
+
+              <div className="flex items-center justify-between mt-auto">
                 {product.rate && (
-                  <div className="mb-6 inline-flex bg-gradient-to-r from-[#C9922A] to-[#F0C96A] text-[#1E2030] px-5 py-2 rounded-full text-sm font-bold shadow-[0_4px_16px_rgba(201,146,42,0.25)] transform transition-all duration-400 group-hover:scale-105 group-hover:shadow-[0_6px_20px_rgba(201,146,42,0.35)]">
-                    {product.rate}
-                  </div>
+                  <span className="text-sm font-bold text-[#C0001B] bg-[#C0001B]/8 px-3 py-1 rounded-full">{product.rate}</span>
                 )}
-                
-                <button className="flex items-center text-[#C0001B] font-bold group-hover:text-[#8B0015] transition-colors duration-300">
-                  Apply Now 
-                  <ArrowRight className="w-5 h-5 ml-2 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]" />
-                </button>
+                <span className={`text-sm font-bold text-[#C0001B] flex items-center gap-1 group-hover:gap-2 transition-all ${product.rate ? "ml-auto" : ""}`}>
+                  Explore <ArrowRight className="w-4 h-4" />
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

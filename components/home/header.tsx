@@ -1,332 +1,480 @@
 "use client"
-import { useState, useEffect } from "react"
+
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, X, ChevronDown, ArrowRight, Home, Car, Building2, UserCircle, Briefcase, Landmark, ShieldCheck, Wallet, PiggyBank, Percent, ArrowUpRight, MapPin, Calculator, Download, PhoneCall, Building, FileText, Info, Factory, Banknote, HandCoins, TrendingUp, Layers, CircleDollarSign, Settings } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetHeader } from "@/components/ui/sheet"
+import {
+  Menu, Globe, Shield, Building2, CreditCard, Landmark, PiggyBank, Home,
+  Car, GraduationCap, Briefcase, Smartphone, Calculator, Users, FileText,
+  Search, MapPin, MessageCircle, Sun, Moon, Type, Bell, ChevronDown,
+  MonitorSmartphone, ChevronRight, Repeat, Coins, Phone
+} from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useBankingSegment } from "./banking-segment-context"
 
-// ─── Personal Banking Menu Data ──────────────────────────────────────────
-const personalMenuData = {
-  Loans: {
-    featured: {
-      tag: "✨ Special This Month",
-      title: "Home Loan @ 8.50%",
-      desc: "Processing fee waived till March 31.",
-      cta: "Apply Now",
-      href: "/loans/home-loans"
+// ─── Mega Menu Data ──────────────────────────────────────────────────────────
+
+const megaMenuData = {
+  personal: {
+    Accounts: {
+      sections: [
+        {
+          heading: "Deposit Accounts",
+          links: [
+            { label: "Savings Account", href: "/savings-account", desc: "Zero minimum balance · up to 6% p.a." },
+            { label: "Interest Rates", href: "/interest-rates", desc: "All deposit & loan rates in one place" },
+            { label: "Service Charges", href: "/service-charges", desc: "Transparent fee structure" },
+          ]
+        },
+        {
+          heading: "Quick Actions",
+          links: [
+            { label: "Open an Account", href: "/savings-account", desc: "Start online in minutes" },
+            { label: "Locate Us", href: "/locate-us", desc: "Find your nearest branch" },
+            { label: "Download Forms", href: "/download-forms", desc: "All forms in one place" },
+          ]
+        }
+      ],
+      highlight: { label: "Savings Account", rate: "6.00% p.a.", href: "/savings-account" }
     },
-    products: [
-      { icon: Home, title: "Home Loans", href: "/loans/home-loans", desc: "Build your dream home" },
-      { icon: Car, title: "Vehicle Loans", href: "/loans/vehicle-loans", desc: "Drive your dream car" },
-      { icon: UserCircle, title: "Personal Loans", href: "/loans/personal-loans", desc: "For all your needs" },
-      { icon: Banknote, title: "Gold Loans", href: "/loans/gold-loans", desc: "Quick loan against gold" }
-    ],
-    allLink: "View all loan products",
-    allHref: "/loans"
+    Deposits: {
+      sections: [
+        {
+          heading: "Deposit Schemes",
+          links: [
+            { label: "Time Deposit (FD)", href: "/time-deposit", desc: "Guaranteed returns · up to 7.00% p.a." },
+            { label: "Recurring Deposit", href: "/recurring-deposit", desc: "Monthly savings · up to 6.50% p.a." },
+            { label: "Double Deposit", href: "/double-deposit", desc: "Flagship scheme to double your money" },
+          ]
+        },
+        {
+          heading: "Tools",
+          links: [
+            { label: "EMI Calculator", href: "/emi-calculator", desc: "Calculate your loan EMI" },
+            { label: "Interest Rates", href: "/interest-rates", desc: "Compare all deposit rates" },
+          ]
+        }
+      ],
+      highlight: { label: "Special FD", rate: "7.00% p.a.", href: "/time-deposit" }
+    },
+    Loans: {
+      sections: [
+        {
+          heading: "Personal Loans",
+          links: [
+            { label: "Home Loan", href: "/home-loan", desc: "From 8.50% p.a." },
+            { label: "Gold Loan", href: "/gold-loan", desc: "From 9.00% · Instant disbursal" },
+            { label: "Personal Loan", href: "/personal-loan", desc: "From 12.00% p.a." },
+            { label: "Car Loan", href: "/car-loan", desc: "From 9.50% p.a." },
+            { label: "Education Loan", href: "/education-loan", desc: "From 10.00% p.a." },
+          ]
+        },
+        {
+          heading: "More Loans",
+          links: [
+            { label: "Festival Loan", href: "/festival-loan", desc: "Seasonal personal finance" },
+            { label: "Loan Against FD", href: "/loan-against-fd", desc: "Use your FD as collateral" },
+            { label: "Loan Against Property", href: "/loan-against-property", desc: "Tap into property equity" },
+            { label: "EMI Calculator", href: "/emi-calculator", desc: "Plan your repayments" },
+          ]
+        }
+      ],
+      highlight: { label: "Gold Loan", rate: "From 9.00%", href: "/gold-loan" }
+    },
+    Services: {
+      sections: [
+        {
+          heading: "Digital Banking",
+          links: [
+            { label: "Net Banking", href: "/net-banking", desc: "Secure 24×7 online banking" },
+            { label: "Mobile Banking", href: "/mobile-banking", desc: "Full banking app for Android & iOS" },
+            { label: "UPI / QR Payments", href: "/upi-qr", desc: "Instant transfers via UPI" },
+            { label: "BBPS Bill Pay", href: "/bbps", desc: "Pay all your utility bills" },
+            { label: "Debit Cards", href: "/debit-cards", desc: "RuPay powered debit cards" },
+          ]
+        },
+        {
+          heading: "Other Services",
+          links: [
+            { label: "Safe Deposit Locker", href: "/locker", desc: "Secure vault for valuables" },
+            { label: "NEFT / RTGS", href: "/neft-rtgs", desc: "Interbank fund transfers" },
+            { label: "IMPS", href: "/imps", desc: "Immediate payment system" },
+            { label: "ATM Services", href: "/atm", desc: "ATM network & limits" },
+          ]
+        }
+      ],
+      highlight: null
+    },
+    "Stay Connected": {
+      sections: [
+        {
+          heading: "Find Us",
+          links: [
+            { label: "Locate Us", href: "/locate-us", desc: "Branch & ATM locations" },
+            { label: "IFSC Codes", href: "/ifsc-codes", desc: "All branch IFSC codes" },
+            { label: "Contact Us", href: "/contact-us", desc: "Call / email support" },
+          ]
+        },
+        {
+          heading: "Help & Redressal",
+          links: [
+            { label: "Grievance Redressal", href: "/grievance-redressal", desc: "Lodge a formal complaint" },
+            { label: "Feedback", href: "/feedback", desc: "Share your experience" },
+            { label: "Cyber Awareness", href: "/cyber-awareness", desc: "Stay safe from fraud" },
+          ]
+        }
+      ],
+      highlight: null
+    }
   },
-  Accounts: {
-    featured: {
-      tag: "⭐ Most Popular",
-      title: "Premium Savings",
-      desc: "Zero balance requirement with max benefits.",
-      cta: "Open Account",
-      href: "/accounts/savings-account"
+  business: {
+    Accounts: {
+      sections: [
+        {
+          heading: "Business Accounts",
+          links: [
+            { label: "Current Account", href: "/current-account", desc: "High-volume transaction account" },
+            { label: "Interest Rates", href: "/interest-rates", desc: "Latest business deposit rates" },
+            { label: "Service Charges", href: "/service-charges", desc: "Business fee structure" },
+          ]
+        },
+        {
+          heading: "Quick Actions",
+          links: [
+            { label: "Open Current Account", href: "/current-account", desc: "Start in minutes" },
+            { label: "Contact a RM", href: "/contact-us", desc: "Talk to a relationship manager" },
+          ]
+        }
+      ],
+      highlight: null
     },
-    products: [
-      { icon: Wallet, title: "Savings Account", href: "/accounts/savings-account", desc: "Everyday banking" },
-      { icon: Building2, title: "Current Account", href: "/accounts/current-account", desc: "For your daily business" },
-      { icon: ShieldCheck, title: "Salary Account", href: "/accounts/salary-account", desc: "Corporate benefits" },
-      { icon: Landmark, title: "Trust Account", href: "/accounts/trust-account", desc: "For societies & trusts" }
-    ],
-    allLink: "View all account types",
-    allHref: "/accounts"
-  },
-  Deposits: {
-    featured: {
-      tag: "🔥 Best Return",
-      title: "1-Year Special FD",
-      desc: "Earn up to 7.00% p.a. Secure growth.",
-      cta: "Start Investing",
-      href: "/deposits/fixed-deposits"
+    Deposits: {
+      sections: [
+        {
+          heading: "Business Deposits",
+          links: [
+            { label: "Business Time Deposit", href: "/biz-time-deposit", desc: "Secure fixed returns" },
+            { label: "Business Recurring Deposit", href: "/biz-recurring-deposit", desc: "Regular business savings" },
+            { label: "Business Double Deposit", href: "/biz-double-deposit", desc: "Double your surplus funds" },
+          ]
+        }
+      ],
+      highlight: { label: "Business FD", rate: "7.00% p.a.", href: "/biz-time-deposit" }
     },
-    products: [
-      { icon: Percent, title: "Fixed Deposits", href: "/deposits/fixed-deposits", desc: "Assured high returns" },
-      { icon: PiggyBank, title: "Recurring Deposits", href: "/deposits/recurring-deposits", desc: "Save small, grow big" },
-      { icon: ArrowUpRight, title: "Tax Saver FD", href: "/deposits/tax-saver-fd", desc: "Save tax under 80C" },
-      { icon: ShieldCheck, title: "Senior Citizen FD", href: "/deposits/senior-citizen-fd", desc: "Extra 0.50% interest" }
-    ],
-    allLink: "View all deposit options",
-    allHref: "/deposits"
-  },
-  Services: {
-    featured: {
-      tag: "📍 Find Us",
-      title: "Branch & ATM Locator",
-      desc: "Find the nearest MNS Bank branch or ATM.",
-      cta: "Locate Us",
-      href: "/branch-locator"
+    Loans: {
+      sections: [
+        {
+          heading: "Business Loans",
+          links: [
+            { label: "Working Capital Loan", href: "/working-capital-loan", desc: "Day-to-day operations" },
+            { label: "Overdraft Facility", href: "/overdraft-facility", desc: "Flexible credit limits" },
+            { label: "Transport Loan", href: "/transport-loan", desc: "Commercial vehicle finance" },
+            { label: "Professional Loan", href: "/professional-loan", desc: "For doctors, CAs & professionals" },
+            { label: "Micro Finance", href: "/micro-finance", desc: "SHG / JLG lending" },
+          ]
+        }
+      ],
+      highlight: { label: "Working Capital", rate: "From 13.00%", href: "/working-capital-loan" }
     },
-    products: [
-      { icon: Calculator, title: "EMI Calculator", href: "/emi-calculator", desc: "Plan your repayment" },
-      { icon: Download, title: "Download Forms", href: "/download-forms", desc: "Get all customer forms" },
-      { icon: PhoneCall, title: "Contact Us", href: "/contact-us", desc: "We're here to help" },
-      { icon: MapPin, title: "Locate Branch", href: "/branch-locator", desc: "Find nearest branch" }
-    ],
-    allLink: "View all policies",
-    allHref: "/policy-centre"
-  },
-  About: {
-    featured: {
-      tag: "🏛️ Legacy",
-      title: "Since 1954",
-      desc: "Serving Bhopal for over 70 years with trust.",
-      cta: "Our Story",
-      href: "/about-us"
+    Services: {
+      sections: [
+        {
+          heading: "Digital Services",
+          links: [
+            { label: "Net Banking", href: "/net-banking", desc: "Secure online banking" },
+            { label: "Mobile Banking", href: "/mobile-banking", desc: "Banking on the go" },
+            { label: "UPI / QR Payments", href: "/upi-qr", desc: "Instant transfers" },
+            { label: "BBPS Bill Pay", href: "/bbps", desc: "Utility bill payments" },
+          ]
+        }
+      ],
+      highlight: null
     },
-    products: [
-      { icon: Building, title: "About Us", href: "/about-us", desc: "Our history & mission" },
-      { icon: Briefcase, title: "Careers", href: "/careers", desc: "Join our team" },
-      { icon: FileText, title: "Tenders", href: "/tenders", desc: "Active business tenders" },
-      { icon: Info, title: "Grievances", href: "/grievance-redressal", desc: "Customer resolution" }
-    ],
-    allLink: "Read our privacy policy",
-    allHref: "/privacy-policy"
+    "Stay Connected": {
+      sections: [
+        {
+          heading: "Support",
+          links: [
+            { label: "Contact Us", href: "/contact-us", desc: "Get in touch" },
+            { label: "Locate Us", href: "/locate-us", desc: "Branch & ATM locator" },
+            { label: "Grievance Redressal", href: "/grievance-redressal", desc: "Lodge a complaint" },
+          ]
+        }
+      ],
+      highlight: null
+    }
   }
 }
 
-// ─── Business Banking Menu Data ──────────────────────────────────────────
-const businessMenuData = {
-  Loans: {
-    featured: {
-      tag: "💼 For Enterprises",
-      title: "MSME Loan @ 9.50%",
-      desc: "Quick disbursement with minimal documentation.",
-      cta: "Apply Now",
-      href: "/loans/business-loans"
-    },
-    products: [
-      { icon: Briefcase, title: "Business Loans", href: "/loans/business-loans", desc: "Grow your enterprise" },
-      { icon: Factory, title: "MSME Loans", href: "/loans/msme-loans", desc: "For micro & small units" },
-      { icon: TrendingUp, title: "Working Capital", href: "/loans/working-capital", desc: "Fuel daily operations" },
-      { icon: CircleDollarSign, title: "Overdraft Facility", href: "/loans/overdraft", desc: "Flexible credit line" }
-    ],
-    allLink: "View all business loans",
-    allHref: "/loans"
-  },
-  Accounts: {
-    featured: {
-      tag: "🏢 For Business",
-      title: "Business Current A/c",
-      desc: "High transaction limits with premium benefits.",
-      cta: "Open Account",
-      href: "/accounts/current-account"
-    },
-    products: [
-      { icon: Building2, title: "Current Account", href: "/accounts/current-account", desc: "High-volume transactions" },
-      { icon: HandCoins, title: "Cash Credit Account", href: "/accounts/cash-credit", desc: "Credit against security" },
-      { icon: Layers, title: "OD Account", href: "/accounts/overdraft", desc: "Overdraft facility" },
-      { icon: Landmark, title: "Partnership Account", href: "/accounts/partnership", desc: "For firms & partners" }
-    ],
-    allLink: "View all business accounts",
-    allHref: "/accounts"
-  },
-  Deposits: {
-    featured: {
-      tag: "📈 Institutional",
-      title: "Corporate FD",
-      desc: "Competitive rates for institutional deposits.",
-      cta: "Start Investing",
-      href: "/deposits/fixed-deposits"
-    },
-    products: [
-      { icon: Percent, title: "Fixed Deposits", href: "/deposits/fixed-deposits", desc: "Assured returns for firms" },
-      { icon: ArrowUpRight, title: "Flexi Deposits", href: "/deposits/flexi-deposits", desc: "Withdraw anytime" },
-      { icon: ShieldCheck, title: "Institutional FD", href: "/deposits/institutional-fd", desc: "For corporates & trusts" },
-      { icon: PiggyBank, title: "Recurring Deposits", href: "/deposits/recurring-deposits", desc: "Systematic savings" }
-    ],
-    allLink: "View all deposit options",
-    allHref: "/deposits"
-  },
-  // Services & About are shared across segments
-  Services: personalMenuData.Services,
-  About: personalMenuData.About
-}
+// ─── Types ───────────────────────────────────────────────────────────────────
 
-type MenuDataType = typeof personalMenuData
+type SegmentKey = "personal" | "business"
+type NavKey = keyof typeof megaMenuData["personal"]
+
+// ─── Main Header Component ───────────────────────────────────────────────────
 
 export function Header() {
-  const [scrolled, setScrolled] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [language, setLanguage] = useState<'EN' | 'HI'>('EN')
-  const { segment } = useBankingSegment()
-  
-  const megaMenuData: MenuDataType = segment === "personal" ? personalMenuData : businessMenuData
-  
+  const [isOpen, setIsOpen] = useState(false)
+  const [activeMenu, setActiveMenu] = useState<NavKey | null>(null)
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const { segment, setSegment } = useBankingSegment()
+
+  const navKeys = Object.keys(megaMenuData[segment as SegmentKey]) as NavKey[]
+  const currentMenu = megaMenuData[segment as SegmentKey]
+
+  // Close mega menu on outside click
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    function handle(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setActiveMenu(null)
+      }
+    }
+    document.addEventListener("mousedown", handle)
+    return () => document.removeEventListener("mousedown", handle)
   }, [])
-  
-  const navItemsEN = ["Accounts", "Deposits", "Loans", "Services", "About"]
-  const navItemsHI = ["खाते", "जमा", "ऋण", "सेवाएं", "हमारे बारे में"]
-  
-  const navItems = language === 'EN' ? navItemsEN : navItemsHI
-  const getNavKey = (index: number) => navItemsEN[index]
-  
+
+  const topTabs = [
+    { id: "personal", label: "Personal" },
+    { id: "business", label: "Business" },
+  ]
+
   return (
-    <header className={cn(
-      "sticky top-0 z-50 h-[80px] transition-all duration-500 w-full",
-      scrolled ? "glass-header-scrolled shadow-[0_8px_40px_rgba(0,0,0,0.08)]" : "glass-header"
-    )}>
-      <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-        
-        <Link href="/" className="flex items-center relative z-50 group">
-          <Image
-            src="/mnslogo.jpeg"
-            alt="MNS Bank Logo"
-            width={200}
-            height={55}
-            className="h-12 w-auto object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-300"
-            priority
-          />
-        </Link>
-        
-        <nav className="hidden lg:flex items-center justify-center absolute left-1/2 -translate-x-1/2 h-full">
-          {navItems.map((item, index) => {
-            const key = getNavKey(index)
-            return (
-              <div key={key} className="group/nav h-full flex items-center px-5 relative">
-                <Link 
-                  href={megaMenuData[key as keyof typeof megaMenuData]?.allHref || "#"}
-                  className="text-[15px] font-medium text-bank-charcoal hover:text-[#C0001B] transition-colors duration-300 flex items-center gap-1 relative py-2"
-                >
-                  <span className={language === 'HI' ? 'font-devanagari text-[16px]' : ''}>{item}</span>
-                  <ChevronDown className="w-3.5 h-3.5 text-bank-muted group-hover/nav:text-[#C0001B] group-hover/nav:-rotate-180 transition-all duration-400" />
-                  {/* Gold gradient underline */}
-                  <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-[#C0001B] to-[#C9922A] rounded-full transition-all duration-400 group-hover/nav:w-full" />
-                </Link>
-                
-                {/* Premium Mega Menu */}
-                <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 translate-y-6 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:translate-y-0 group-hover/nav:pointer-events-auto transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] z-50">
-                    <div className="glass-panel w-[620px] rounded-[22px] shadow-[0_32px_80px_rgba(0,0,0,0.14)] flex flex-col overflow-hidden">
-                      <div className="flex p-2.5">
-                        {/* Left Column (Featured) */}
-                        <div className="w-1/3 bg-gradient-to-br from-[#C9922A] via-[#A87820] to-[#8B6510] rounded-[18px] p-6 text-white flex flex-col justify-between relative overflow-hidden">
-                          <div className="absolute top-0 right-0 w-40 h-40 bg-white/15 rounded-full blur-[30px] -translate-y-1/2 translate-x-1/2" />
-                          <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full blur-[20px] translate-y-1/2 -translate-x-1/2" />
-                          <div className="relative z-10 w-full">
-                            <span className="text-[10px] font-bold uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-full backdrop-blur-sm inline-block">{megaMenuData[key as keyof typeof megaMenuData].featured.tag}</span>
-                            <h4 className="font-serif text-[22px] font-bold mt-4 mb-2 leading-tight">{megaMenuData[key as keyof typeof megaMenuData].featured.title}</h4>
-                            <p className="text-[13px] text-white/85 mb-6 leading-relaxed">{megaMenuData[key as keyof typeof megaMenuData].featured.desc}</p>
-                          </div>
-                          <Button asChild className="w-full bg-white text-[#A87820] hover:bg-[#FAF6EF] rounded-xl font-bold shadow-lg relative z-10 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl border-0">
-                            <Link href={megaMenuData[key as keyof typeof megaMenuData].featured.href}>
-                              {megaMenuData[key as keyof typeof megaMenuData].featured.cta} <ArrowRight className="w-4 h-4 ml-1" />
-                            </Link>
-                          </Button>
-                        </div>
-                        
-                        {/* Right Column (2-grid products) */}
-                        <div className="w-2/3 p-6 grid grid-cols-2 gap-x-4 gap-y-5">
-                          {megaMenuData[key as keyof typeof megaMenuData].products.map((prod, idx) => (
-                            <Link href={prod.href} key={idx} className="group/item flex items-start gap-3 p-3 -m-2 rounded-xl hover:bg-[#C0001B]/[0.04] transition-all duration-300">
-                              <div className={cn(
-                                "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-md",
-                                key === 'Accounts' ? 'bg-[#C0001B]/8 text-[#C0001B]' : 
-                                key === 'Deposits' ? 'bg-[#C9922A]/10 text-[#A87820]' : 
-                                key === 'Services' ? 'bg-cyan-500/8 text-cyan-600' :
-                                key === 'About' ? 'bg-indigo-500/8 text-indigo-600' :
-                                'bg-emerald-500/8 text-emerald-600'
-                              )}>
-                                <prod.icon className="w-5 h-5" />
-                              </div>
-                              <div>
-                                <h5 className="font-bold text-[14px] text-bank-charcoal group-hover/item:text-[#C0001B] transition-colors duration-200">{prod.title}</h5>
-                                <p className="text-[11px] text-bank-muted mt-0.5 leading-relaxed">{prod.desc}</p>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      {/* Bottom strip */}
-                      <div className="bg-gradient-to-r from-[#FAF6EF] to-[#F5ECE8] border-t border-[#C9922A]/10 p-4 text-center">
-                        <Link href={megaMenuData[key as keyof typeof megaMenuData].allHref} className="text-sm font-bold text-[#C0001B] hover:text-[#8B0015] flex items-center justify-center gap-1.5 group/link transition-colors">
-                          {megaMenuData[key as keyof typeof megaMenuData].allLink} 
-                          <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
-                        </Link>
-                      </div>
-                    </div>
+    <header className="sticky top-0 z-50 w-full shadow-sm bg-white" ref={menuRef}>
+
+      {/* ── Row 1: Segment tabs + utility icons ── */}
+      <div className="relative w-full overflow-hidden sm:overflow-visible">
+        <div className="absolute top-0 left-0 w-full h-[40px] bg-[#C0001B] z-0" />
+        <div className="relative z-10 mx-auto flex max-w-[1920px]">
+
+          {/* Logo slant */}
+          <div
+            className="bg-[#C0001B] pt-3 pb-2 pl-4 pr-12 xl:pr-16 flex items-center shrink-0 relative min-w-[200px] md:min-w-[260px]"
+            style={{ clipPath: "polygon(0 0, 100% 0, calc(100% - 25px) 100%, 0 100%)" }}
+          >
+            <Link href="/" className="bg-white/95 p-1.5 md:p-2 rounded-xl flex items-center justify-center shadow-sm relative z-20 transition-transform hover:scale-105">
+              <Image src="/mnslogo.jpeg" alt="MNS Bank Logo" width={150} height={40} className="h-8 md:h-10 w-auto mix-blend-multiply" priority />
+            </Link>
+          </div>
+
+          <div className="flex-1 flex flex-col min-w-0">
+            {/* Segment tabs + icons row */}
+            <div className="flex justify-between items-end h-[40px] px-2 md:px-4">
+              <div className="hidden sm:flex gap-1 pl-1">
+                {topTabs.map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => { setSegment(tab.id as SegmentKey); setActiveMenu(null) }}
+                    className={cn(
+                      "px-4 md:px-5 py-2 rounded-t-xl font-medium text-xs md:text-sm transition-all",
+                      segment === tab.id
+                        ? "bg-white text-[#C0001B] z-10"
+                        : "text-white/90 hover:bg-white/10 hover:text-white"
+                    )}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+              <div className="sm:hidden pl-2 text-white font-medium text-sm self-center">
+                {segment === "personal" ? "Personal" : "Business"}
+              </div>
+              {/* Utility icons */}
+              <div className="flex items-center gap-4 pb-2 text-white/90 text-xs md:text-sm shrink-0 pr-2">
+                <Link href="/about-us" className="hover:text-white hidden transition-colors xl:block">About Us</Link>
+                <div className="flex items-center gap-3.5">
+                  <MapPin className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
+                  <MessageCircle className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
+                  <div className="hidden md:flex items-center gap-3.5 border-l border-white/30 pl-3.5">
+                    <Sun className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
+                    <Moon className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
+                    <Type className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
+                    <Bell className="h-4 w-4 cursor-pointer hover:text-white transition-colors" />
+                  </div>
                 </div>
               </div>
-            )
-          })}
-        </nav>
-        
-        <div className="hidden lg:flex items-center gap-3 relative z-50">
-          <button 
-            className="flex items-center justify-center w-10 h-10 rounded-full border border-[#C9922A]/25 text-bank-charcoal font-bold text-sm hover:bg-[#FAF6EF] hover:border-[#C9922A]/50 transition-all duration-300 group relative bg-white/60 backdrop-blur-sm shadow-sm"
-            aria-label="Toggle language between English and Hindi"
-            title="Switch Language"
-            onClick={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
-          >
-            <span className="font-devanagari text-lg leading-none group-hover:hidden text-[#C0001B]">
-              {language === 'EN' ? 'अ' : 'EN'}
-            </span>
-            <span className="hidden group-hover:block uppercase text-[#C0001B]">
-              {language === 'EN' ? 'HI' : 'अ'}
-            </span>
-          </button>
-          
-          <Button asChild variant="outline" className="border-2 border-[#C0001B] text-[#C0001B] hover:bg-[#C0001B] hover:text-white rounded-full font-bold px-6 h-11 transition-all duration-300">
-            <Link href="/auth/login">{language === 'EN' ? 'Net Banking' : 'नेट बैंकिंग'}</Link>
-          </Button>
-          <Button asChild className="bg-[#C0001B] hover:bg-[#8B0015] text-white rounded-full font-bold px-6 h-11 shadow-[0_4px_16px_rgba(192,0,27,0.35)] transition-all duration-400 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(192,0,27,0.45)] hover-shimmer-sweep border-0 overflow-hidden animate-glow-pulse">
-            <Link href="/auth/register" className={language === 'HI' ? 'font-devanagari' : ''}>{language === 'EN' ? 'Open Account' : 'खाता खोलें'}</Link>
-          </Button>
-        </div>
-        
-        <button 
-          className="lg:hidden p-2 relative z-50 text-bank-charcoal"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-        </button>
-      </div>
-      
-      {/* Mobile Fullscreen Overlay */}
-      <div className={cn(
-        "fixed inset-0 bg-white/95 backdrop-blur-xl z-40 lg:hidden flex flex-col pt-[80px] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]",
-        mobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
-      )}>
-        <nav className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-5">
-          {navItems.map((item, index) => {
-             const key = getNavKey(index)
-             return (
-              <Link 
-                key={key} 
-                href={megaMenuData[key as keyof typeof megaMenuData]?.allHref || "#"}
-                className="text-2xl font-serif font-bold text-bank-charcoal border-b border-[#E5E0D8] pb-5 flex justify-between items-center hover:text-[#C0001B] transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{ animationDelay: `${index * 0.08}s` }}
-              >
-                <span className={language === 'HI' ? 'font-devanagari' : ''}>{item}</span>
-                <ChevronDown className="w-5 h-5 text-[#C9922A] -rotate-90" />
-              </Link>
-            )
-          })}
-          <div className="mt-auto space-y-4 pt-8">
-            <Button asChild variant="outline" className="w-full border-2 border-[#C0001B] text-[#C0001B] h-14 rounded-xl font-bold text-lg">
-              <Link href="/auth/login" className={language === 'HI' ? 'font-devanagari text-xl' : ''}>{language === 'EN' ? 'Net Banking' : 'नेट बैंकिंग'}</Link>
-            </Button>
-            <Button asChild className="w-full bg-[#C0001B] text-white h-14 rounded-xl font-bold text-lg shadow-lg shadow-[#C0001B]/20 border-0">
-              <Link href="/auth/register" className={language === 'HI' ? 'font-devanagari text-xl' : ''}>{language === 'EN' ? 'Open Account' : 'खाता खोलें'}</Link>
-            </Button>
+            </div>
+
+            {/* ── Row 2: Search + Actions ── */}
+            <div className="bg-white h-[60px] md:h-[68px] flex items-center justify-between px-2 md:px-6 rounded-tl-2xl -ml-2 sm:-ml-4 relative z-10 flex-1 border-b border-gray-100/50">
+              {/* Search */}
+              <div className="flex-1 flex items-center min-w-0 pr-4 pl-4 sm:pl-6">
+                <div className="relative w-full max-w-md hidden md:flex items-center">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#C0001B]/60 h-4 w-4" />
+                  <input
+                    className="w-full pl-9 pr-4 py-2 bg-gray-50/80 rounded-full border border-gray-200/80 text-sm focus:outline-none focus:ring-2 focus:ring-[#C0001B]/20 focus:border-[#C0001B] placeholder:text-gray-400 transition-all font-medium text-gray-700"
+                    placeholder="What are you looking for today?"
+                  />
+                </div>
+              </div>
+              {/* Actions */}
+              <div className="flex items-center gap-3 md:gap-4 shrink-0 pr-2">
+                <div className="hidden lg:flex items-center gap-4 text-sm">
+                  <Link href="/contact-us" className="text-[#C0001B] font-semibold hover:text-[#C0001B]/70 transition-colors">Support</Link>
+                  <Link href="/grievance-redressal" className="text-[#C0001B] font-semibold border-l-2 border-[#C0001B]/20 pl-4 hover:text-[#C0001B]/70 transition-colors">Lodge a Complaint</Link>
+                </div>
+                <Button variant="outline" className="hidden sm:inline-flex rounded-xl border-gray-200 text-gray-700 hover:bg-gray-50 hover:text-[#C0001B] h-10 md:h-11 px-4 font-semibold transition-all">
+                  Open Digital A/C
+                </Button>
+                <Button className="bg-[#C0001B] hover:bg-[#8B0015] text-white rounded-xl shadow-[0_4px_12px_rgba(139,0,21,0.2)] h-10 md:h-11 px-4 md:px-6 font-semibold transition-all group">
+                  Login <ChevronDown className="ml-1.5 h-4 w-4 opacity-80" />
+                </Button>
+                {/* Mobile trigger */}
+                <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                  <SheetTrigger asChild className="lg:hidden ml-1">
+                    <Button variant="ghost" size="icon" className="h-10 w-10 text-gray-700 hover:bg-gray-100 rounded-xl">
+                      <Menu className="h-5 w-5" />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="w-[85vw] sm:w-[400px] overflow-y-auto p-0 z-[100]">
+                    <div className="p-5">
+                      <SheetHeader className="text-left mb-5">
+                        <Image src="/mnslogo.jpeg" alt="MNS Bank" width={140} height={40} className="h-8 w-auto mix-blend-multiply" />
+                      </SheetHeader>
+                      {/* Mobile segment switcher */}
+                      <div className="flex p-1 bg-gray-100 rounded-xl mb-5 border border-gray-200">
+                        {topTabs.map(tab => (
+                          <button key={tab.id} onClick={() => { setSegment(tab.id as SegmentKey); setMobileExpanded(null) }}
+                            className={cn("flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all", segment === tab.id ? "bg-white text-[#C0001B] shadow-sm" : "text-gray-500 hover:text-gray-700")}
+                          >{tab.label}</button>
+                        ))}
+                      </div>
+                      {/* Mobile nav items */}
+                      <nav className="flex flex-col gap-1">
+                        {navKeys.map(key => {
+                          const data = currentMenu[key]
+                          const expanded = mobileExpanded === key
+                          return (
+                            <div key={key}>
+                              <button
+                                onClick={() => setMobileExpanded(expanded ? null : key)}
+                                className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-gray-800 hover:bg-gray-50 transition-colors"
+                              >
+                                {key}
+                                <ChevronDown className={cn("w-4 h-4 text-gray-400 transition-transform", expanded && "rotate-180")} />
+                              </button>
+                              {expanded && (
+                                <div className="pl-4 pb-2 flex flex-col gap-1">
+                                  {data.sections.map(sec => sec.links.map(link => (
+                                    <Link key={link.href} href={link.href}
+                                      className="px-3 py-2 rounded-lg text-sm text-gray-600 hover:text-[#C0001B] hover:bg-red-50/50 font-medium transition-colors"
+                                      onClick={() => setIsOpen(false)}
+                                    >{link.label}</Link>
+                                  )))}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
+                        <div className="border-t border-gray-100 pt-4 mt-2 flex flex-col gap-2">
+                          <Link href="/about-us" className="px-4 py-2 text-sm font-semibold text-gray-700" onClick={() => setIsOpen(false)}>About Us</Link>
+                          <Link href="/contact-us" className="px-4 py-2 text-sm font-semibold text-[#C0001B]" onClick={() => setIsOpen(false)}>Support</Link>
+                          <Link href="/grievance-redressal" className="px-4 py-2 text-sm font-semibold text-[#C0001B]" onClick={() => setIsOpen(false)}>Lodge a Complaint</Link>
+                        </div>
+                        <div className="pt-3 space-y-2 pb-8">
+                          <Button className="w-full bg-[#C0001B] hover:bg-[#8B0015] text-white h-12 rounded-xl font-semibold">Login to Net Banking</Button>
+                          <Button variant="outline" className="w-full border-gray-200 text-gray-700 h-12 rounded-xl font-semibold">Open Digital Account</Button>
+                        </div>
+                      </nav>
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            </div>
           </div>
-        </nav>
+        </div>
+      </div>
+
+      {/* ── Row 3: Product Nav ── */}
+      <div className="bg-white border-b border-gray-100 relative z-40">
+        <div className="max-w-7xl mx-auto px-4 lg:px-6 hidden lg:flex">
+          {navKeys.map(key => (
+            <button
+              key={key}
+              onMouseEnter={() => setActiveMenu(key)}
+              onFocus={() => setActiveMenu(key)}
+              onClick={() => setActiveMenu(activeMenu === key ? null : key)}
+              className={cn(
+                "px-5 py-4 text-[14px] font-medium transition-all relative border-b-2 flex items-center gap-1.5",
+                activeMenu === key
+                  ? "text-[#C0001B] border-[#C0001B]"
+                  : "text-gray-700 border-transparent hover:text-[#C0001B] hover:border-[#C0001B]/40"
+              )}
+            >
+              {key}
+              <ChevronDown className={cn("w-3.5 h-3.5 transition-transform opacity-60", activeMenu === key && "rotate-180")} />
+            </button>
+          ))}
+        </div>
+
+        {/* ── Mega Menu Dropdown ── */}
+        {activeMenu && (
+          <div
+            className="absolute left-0 right-0 top-full bg-white shadow-[0_12px_40px_rgba(0,0,0,0.1)] border-t border-gray-100 z-50"
+            onMouseLeave={() => setActiveMenu(null)}
+          >
+            <div className="max-w-7xl mx-auto px-6 py-8">
+              <div className="flex gap-12">
+                {/* Left: sections with links */}
+                <div className="flex-1 grid grid-cols-2 gap-x-16 gap-y-6">
+                  {currentMenu[activeMenu].sections.map((section) => (
+                    <div key={section.heading}>
+                      <h3 className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">{section.heading}</h3>
+                      <ul className="space-y-1">
+                        {section.links.map(link => (
+                          <li key={link.href}>
+                            <Link
+                              href={link.href}
+                              onClick={() => setActiveMenu(null)}
+                              className="group flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-[#FFF5F6] transition-colors"
+                            >
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#C0001B]/30 mt-2 shrink-0 group-hover:bg-[#C0001B] transition-colors" />
+                              <div>
+                                <div className="text-[14px] font-semibold text-gray-800 group-hover:text-[#C0001B] transition-colors">{link.label}</div>
+                                {link.desc && <div className="text-[12px] text-gray-400 mt-0.5">{link.desc}</div>}
+                              </div>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Right: highlight card */}
+                {currentMenu[activeMenu].highlight && (
+                  <div className="w-64 shrink-0">
+                    <div className="bg-gradient-to-br from-[#C0001B] to-[#8B0015] rounded-2xl p-6 text-white relative overflow-hidden h-full flex flex-col justify-between">
+                      <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full" />
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/70">Featured</span>
+                        <div className="text-[22px] font-bold mt-2 leading-tight">{currentMenu[activeMenu].highlight!.label}</div>
+                        <div className="text-[28px] font-bold mt-1">{currentMenu[activeMenu].highlight!.rate}</div>
+                      </div>
+                      <Link
+                        href={currentMenu[activeMenu].highlight!.href}
+                        onClick={() => setActiveMenu(null)}
+                        className="mt-6 inline-flex items-center gap-2 bg-white text-[#C0001B] text-sm font-bold px-4 py-2 rounded-full hover:bg-gray-50 transition-colors"
+                      >
+                        Explore <ChevronRight className="w-4 h-4" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Bottom browse all */}
+              <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                <span className="text-xs text-gray-400">Browse all {activeMenu.toLowerCase()} products & services</span>
+                <Link href="#" onClick={() => setActiveMenu(null)} className="text-sm font-bold text-[#C0001B] flex items-center gap-1 hover:gap-2 transition-all">
+                  View all <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   )

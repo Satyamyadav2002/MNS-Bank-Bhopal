@@ -1,8 +1,8 @@
 import { UtilityBar } from "@/components/home/utility-bar"
 import { Header } from "@/components/home/header"
 import { HeroSection } from "@/components/home/hero-section"
+import { QuickApply } from "@/components/home/quick-apply"
 import { TrustBar } from "@/components/home/trust-bar"
-import { QuickAssistance } from "@/components/home/quick-assistance"
 import { ProductsSection } from "@/components/home/products-section"
 import { InterestRatesWidget } from "@/components/home/interest-rates"
 import { DigitalServicesSection } from "@/components/home/digital-services"
@@ -23,10 +23,10 @@ export default function HomePage() {
         <UtilityBar />
         <Header />
         <HeroSection />
+        <QuickApply />
         <TrustBar />
         
         <main>
-          <section id="assistance"><QuickAssistance /></section>
           <section id="products"><ProductsSection /></section>
           <section id="calculator"><InterestRatesWidget /></section>
           <section id="digital"><DigitalServicesSection /></section>
