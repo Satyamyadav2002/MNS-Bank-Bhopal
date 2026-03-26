@@ -32,7 +32,7 @@ export function MobileNav() {
             </span>
             
             {/* Gold gradient indicator dot */}
-            <div className={`absolute bottom-1.5 w-1 h-1 rounded-full bg-gradient-to-r from-[#C0001B] to-[#C9922A] transition-all duration-400 ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
+            <div className={`absolute bottom-1.5 w-1 h-1 rounded-full bg-[#C0001B] transition-all duration-400 ${isActive ? 'scale-100 opacity-100' : 'scale-0 opacity-0'}`} />
           </Link>
         )
       })}

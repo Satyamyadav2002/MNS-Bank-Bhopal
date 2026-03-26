@@ -5,33 +5,59 @@ import { Footer } from "@/components/home/footer"
 import { BankingSegmentProvider } from "@/components/home/banking-segment-context"
 import { SegmentSwitcher } from "@/components/home/segment-switcher"
 import Link from "next/link"
-import { Phone, ChevronRight, ArrowRight } from "lucide-react"
+import { Phone, ChevronRight, ArrowRight, Building2, Briefcase, Factory, Truck, Landmark, Wallet } from "lucide-react"
 
-// ── Tab configs ──────────────────────────────────────────────────────────────
-const LOAN_TYPES = [
+// ── Business Loan Configs ─────────────────────────────────────────────────────
+const BUSINESS_LOAN_TYPES = [
   {
-    id: "personal",
-    label: "Personal Loan",
-    minAmount: 10000,  maxAmount: 500000,  defaultAmount: 100000,
-    minRate: 10,       maxRate: 24,         defaultRate: 12,
-    minTenure: 1,      maxTenure: 5,        defaultTenure: 3,
-    applyHref: "/personal-loan",
+    id: "msme",
+    label: "MSME Loan",
+    icon: Factory,
+    minAmount: 100000,   maxAmount: 5000000,   defaultAmount: 1000000,
+    minRate: 10,         maxRate: 18,           defaultRate: 12,
+    minTenure: 1,        maxTenure: 7,          defaultTenure: 5,
+    applyHref: "/loans/msme-loan",
+    desc: "For Micro, Small & Medium Enterprises",
   },
   {
-    id: "home",
-    label: "Home Loan",
-    minAmount: 500000, maxAmount: 10000000, defaultAmount: 2000000,
-    minRate: 8,        maxRate: 14,         defaultRate: 8.5,
-    minTenure: 5,      maxTenure: 20,       defaultTenure: 15,
-    applyHref: "/home-loan",
+    id: "working-capital",
+    label: "Working Capital",
+    icon: Wallet,
+    minAmount: 50000,    maxAmount: 3000000,   defaultAmount: 500000,
+    minRate: 11,         maxRate: 20,           defaultRate: 13,
+    minTenure: 1,        maxTenure: 5,          defaultTenure: 3,
+    applyHref: "/loans/working-capital-loan",
+    desc: "Short-term operational funding",
   },
   {
-    id: "car",
-    label: "Car Loan",
-    minAmount: 100000, maxAmount: 3000000,  defaultAmount: 500000,
-    minRate: 9,        maxRate: 16,         defaultRate: 9.5,
-    minTenure: 1,      maxTenure: 7,        defaultTenure: 5,
-    applyHref: "/car-loan",
+    id: "business-expansion",
+    label: "Business Expansion",
+    icon: Building2,
+    minAmount: 500000,   maxAmount: 10000000,  defaultAmount: 2500000,
+    minRate: 9,          maxRate: 16,           defaultRate: 11,
+    minTenure: 3,        maxTenure: 15,         defaultTenure: 7,
+    applyHref: "/loans/business-expansion-loan",
+    desc: "Scale your business operations",
+  },
+  {
+    id: "commercial-vehicle",
+    label: "Commercial Vehicle",
+    icon: Truck,
+    minAmount: 200000,   maxAmount: 5000000,   defaultAmount: 1500000,
+    minRate: 9,          maxRate: 15,           defaultRate: 10.5,
+    minTenure: 1,        maxTenure: 7,          defaultTenure: 5,
+    applyHref: "/loans/commercial-vehicle-loan",
+    desc: "Finance your fleet",
+  },
+  {
+    id: "overdraft",
+    label: "Overdraft Facility",
+    icon: Landmark,
+    minAmount: 50000,    maxAmount: 2000000,   defaultAmount: 300000,
+    minRate: 10,         maxRate: 18,           defaultRate: 12.5,
+    minTenure: 1,        maxTenure: 3,          defaultTenure: 1,
+    applyHref: "/loans/overdraft-facility",
+    desc: "Flexible credit line for businesses",
   },
 ]
 
@@ -46,19 +72,16 @@ function fmtShort(n: number) {
   return `${n}`
 }
 
-// Simple donut ring SVG
+// Donut ring SVG
 function DonutChart({ principal, interest }: { principal: number; interest: number }) {
   const total = principal + interest
   const pPct = total > 0 ? (principal / total) * 100 : 100
-  const iPct = 100 - pPct
   const r = 70, cx = 90, cy = 90, stroke = 18
   const c = 2 * Math.PI * r
   const pDash = (pPct / 100) * c
-  const iDash = (iPct / 100) * c
 
   return (
     <svg width={180} height={180} viewBox="0 0 180 180" className="mx-auto">
-      {/* Track */}
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="#f3f4f6" strokeWidth={stroke} />
       {/* Interest (teal) — base */}
       <circle cx={cx} cy={cy} r={r} fill="none" stroke="#14b8a6"
@@ -75,24 +98,24 @@ function DonutChart({ principal, interest }: { principal: number; interest: numb
   )
 }
 
-export default function EmiCalculatorPage() {
+export default function BusinessEmiCalculatorPage() {
   const [activeTab, setActiveTab] = useState(0)
-  const cfg = LOAN_TYPES[activeTab]
+  const cfg = BUSINESS_LOAN_TYPES[activeTab]
+  const Icon = cfg.icon
 
   const [amount, setAmount] = useState(cfg.defaultAmount)
   const [rate, setRate] = useState(cfg.defaultRate)
   const [tenure, setTenure] = useState(cfg.defaultTenure)
 
-  // Sync defaults when tab changes
   function switchTab(idx: number) {
-    const c = LOAN_TYPES[idx]
+    const c = BUSINESS_LOAN_TYPES[idx]
     setActiveTab(idx)
     setAmount(c.defaultAmount)
     setRate(c.defaultRate)
     setTenure(c.defaultTenure)
   }
 
-  // EMI calculation (reducing balance)
+  // EMI calculation
   const { emi, totalPayable, totalInterest } = useMemo(() => {
     const P = amount
     const R = rate / 12 / 100
@@ -103,10 +126,10 @@ export default function EmiCalculatorPage() {
     return { emi: e, totalPayable: t, totalInterest: t - P }
   }, [amount, rate, tenure])
 
-  // Amortization schedule (yearly summary)
+  // Amortization schedule (yearly)
   const schedule = useMemo(() => {
-    const P = amount, R = rate / 12 / 100, N = tenure * 12
-    let balance = P
+    const R = rate / 12 / 100, N = tenure * 12
+    let balance = amount
     const rows: { year: number; principal: number; interest: number; balance: number }[] = []
     for (let y = 1; y <= tenure; y++) {
       let yPrin = 0, yInt = 0
@@ -119,6 +142,14 @@ export default function EmiCalculatorPage() {
     }
     return rows
   }, [amount, rate, tenure, emi])
+
+  // Compare with personal loan rate
+  const personalRate = 12
+  const personalR = personalRate / 12 / 100
+  const personalN = tenure * 12
+  const personalEmi = personalR === 0 ? amount / personalN :
+    (amount * personalR * Math.pow(1 + personalR, personalN)) / (Math.pow(1 + personalR, personalN) - 1)
+  const saving = personalEmi - emi
 
   const sliderClass = "w-full h-1.5 rounded-full appearance-none cursor-pointer accent-[#C0001B] bg-gradient-to-r from-[#C0001B] to-[#C0001B]"
 
@@ -134,27 +165,52 @@ export default function EmiCalculatorPage() {
             <nav className="flex items-center justify-center gap-1.5 text-xs text-gray-400 mb-4 font-medium">
               <Link href="/" className="hover:text-[#C0001B]">Home</Link>
               <ChevronRight className="w-3 h-3 text-gray-300" />
+              <Link href="/" className="hover:text-[#C0001B]">Business</Link>
+              <ChevronRight className="w-3 h-3 text-gray-300" />
               <span className="text-gray-600">EMI Calculator</span>
             </nav>
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">EMI Calculator</h1>
+            <div className="inline-flex items-center gap-2 bg-[#C0001B]/8 rounded-full px-4 py-1.5 mb-4">
+              <Briefcase className="w-4 h-4 text-[#C0001B]" />
+              <span className="text-xs font-bold text-[#C0001B] uppercase tracking-wider">Business Banking</span>
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">Business Loan EMI Calculator</h1>
             <p className="text-gray-500 max-w-2xl mx-auto text-sm leading-relaxed">
-              Discover how to turn your dreams into reality. Our EMI calculator helps you quickly determine your monthly payments and plan your finances smartly.
+              Plan your business financing with precision. Calculate EMIs for MSME loans, working capital, expansion funding, and more.
             </p>
           </div>
         </div>
 
-        <div className="max-w-5xl mx-auto px-4 py-10">
-          {/* Loan type tabs */}
-          <div className="flex gap-2 mb-8 bg-white border border-gray-100 rounded-2xl p-1.5 shadow-sm w-fit mx-auto">
-            {LOAN_TYPES.map((lt, i) => (
-              <button
-                key={lt.id}
-                onClick={() => switchTab(i)}
-                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${activeTab === i ? "bg-[#C0001B] text-white shadow-md" : "text-gray-500 hover:text-gray-800"}`}
-              >
-                {lt.label} EMI Calculator
-              </button>
-            ))}
+        <div className="max-w-6xl mx-auto px-4 py-10">
+          {/* Loan type tabs — horizontal scroll on mobile */}
+          <div className="flex gap-2 mb-8 overflow-x-auto scrollbar-hide pb-2">
+            {BUSINESS_LOAN_TYPES.map((lt, i) => {
+              const LtIcon = lt.icon
+              return (
+                <button
+                  key={lt.id}
+                  onClick={() => switchTab(i)}
+                  className={`flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-semibold transition-all whitespace-nowrap border ${
+                    activeTab === i
+                      ? "bg-[#C0001B] text-white shadow-lg shadow-[#C0001B]/20 border-transparent"
+                      : "bg-white text-gray-600 hover:text-gray-900 hover:border-[#C0001B]/30 border-gray-100"
+                  }`}
+                >
+                  <LtIcon className="w-4 h-4" />
+                  {lt.label}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Active loan info pill */}
+          <div className="flex items-center gap-3 mb-6 px-1">
+            <div className="w-10 h-10 rounded-xl bg-[#C0001B]/8 flex items-center justify-center">
+              <Icon className="w-5 h-5 text-[#C0001B]" />
+            </div>
+            <div>
+              <div className="font-bold text-gray-900">{cfg.label} EMI Calculator</div>
+              <div className="text-xs text-gray-400">{cfg.desc}</div>
+            </div>
           </div>
 
           <div className="grid lg:grid-cols-5 gap-6">
@@ -214,7 +270,7 @@ export default function EmiCalculatorPage() {
               {/* Result bar */}
               <div className="bg-gradient-to-r from-[#C0001B] to-[#8B0015] rounded-2xl px-6 py-5 flex items-center justify-between flex-wrap gap-4">
                 <div>
-                  <div className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-0.5">Your EMI*</div>
+                  <div className="text-white/70 text-xs font-semibold uppercase tracking-widest mb-0.5">Your Business EMI*</div>
                   <div className="text-3xl font-bold text-white">₹{fmt(emi)}</div>
                   <div className="text-white/50 text-[10px] mt-0.5">*Equated Monthly Installment</div>
                 </div>
@@ -223,6 +279,21 @@ export default function EmiCalculatorPage() {
                   Apply Now <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
+
+              {/* Savings Comparison */}
+              {saving > 0 && (
+                <div className="bg-emerald-50 border border-emerald-100 rounded-2xl px-5 py-4 flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                    <span className="text-emerald-600 text-lg">💡</span>
+                  </div>
+                  <div>
+                    <div className="font-bold text-emerald-800 text-sm">You save ₹{fmt(saving)}/month</div>
+                    <div className="text-xs text-emerald-600 mt-0.5">
+                      Compared to a personal loan at {personalRate}% p.a., your business loan EMI is lower by ₹{fmt(saving)} per month.
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* ── Right: Donut + summary ── */}
@@ -254,21 +325,30 @@ export default function EmiCalculatorPage() {
                   <span className="text-sm text-gray-600 font-medium">Monthly EMI</span>
                   <span className="font-bold text-[#C0001B]">₹{fmt(emi)}</span>
                 </div>
+                <div className="flex items-center justify-between px-3 py-3 bg-gray-50 rounded-xl">
+                  <span className="text-sm text-gray-600 font-medium">Total Interest (%)</span>
+                  <span className="font-bold text-teal-600">{totalPayable > 0 ? ((totalInterest / amount) * 100).toFixed(1) : 0}%</span>
+                </div>
               </div>
 
-              {/* Call back */}
               <a href="tel:07552345678"
                 className="w-full flex items-center justify-center gap-2 border border-[#C0001B] text-[#C0001B] font-bold py-3 rounded-xl hover:bg-[#FFF5F6] transition-colors text-sm">
-                <Phone className="w-4 h-4" /> Get a Call Back
+                <Phone className="w-4 h-4" /> Request Business Loan Callback
               </a>
             </div>
           </div>
 
           {/* ── Amortization Table ── */}
           <div className="mt-10 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-100">
-              <h2 className="font-bold text-gray-900">Yearly Amortization Schedule</h2>
-              <p className="text-xs text-gray-400 mt-0.5">How your loan balance reduces each year</p>
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h2 className="font-bold text-gray-900">Yearly Repayment Schedule</h2>
+                <p className="text-xs text-gray-400 mt-0.5">Business Loan — {cfg.label}</p>
+              </div>
+              <div className="hidden sm:flex items-center gap-2 text-xs text-gray-400">
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>Business Banking</span>
+              </div>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -278,7 +358,7 @@ export default function EmiCalculatorPage() {
                     <th className="text-right px-5 py-3 font-semibold">Principal Paid</th>
                     <th className="text-right px-5 py-3 font-semibold">Interest Paid</th>
                     <th className="text-right px-5 py-3 font-semibold">Year Total</th>
-                    <th className="text-right px-5 py-3 font-semibold">Balance</th>
+                    <th className="text-right px-5 py-3 font-semibold">Outstanding</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -305,34 +385,43 @@ export default function EmiCalculatorPage() {
             </div>
           </div>
 
-          {/* Related loans */}
+          {/* Quick Links — all business loans */}
           <div className="mt-10">
-            <h3 className="text-lg font-bold text-gray-900 mb-5">Apply for a loan</h3>
-            <div className="grid sm:grid-cols-3 gap-4">
-              {LOAN_TYPES.map(lt => (
-                <Link key={lt.id} href={lt.applyHref}
-                  className="group flex items-center justify-between p-4 bg-white border border-gray-100 rounded-xl hover:border-[#C0001B]/30 hover:shadow-md transition-all">
-                  <span className="text-sm font-bold text-gray-900 group-hover:text-[#C0001B] transition-colors">{lt.label}</span>
-                  <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#C0001B] transition-colors" />
-                </Link>
-              ))}
+            <h3 className="text-lg font-bold text-gray-900 mb-5">Explore Business Loans</h3>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {BUSINESS_LOAN_TYPES.map(lt => {
+                const LtIcon = lt.icon
+                return (
+                  <Link key={lt.id} href={lt.applyHref}
+                    className="group flex items-center gap-3 p-4 bg-white border border-gray-100 rounded-xl hover:border-[#C0001B]/30 hover:shadow-md transition-all">
+                    <div className="w-9 h-9 rounded-lg bg-[#C0001B]/8 flex items-center justify-center group-hover:bg-[#C0001B] transition-colors">
+                      <LtIcon className="w-4 h-4 text-[#C0001B] group-hover:text-white transition-colors" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-bold text-gray-900 group-hover:text-[#C0001B] transition-colors">{lt.label}</div>
+                      <div className="text-[11px] text-gray-400 truncate">{lt.desc}</div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#C0001B] transition-colors shrink-0" />
+                  </Link>
+                )
+              })}
             </div>
           </div>
 
-          {/* Cross-link to Business EMI Calculator */}
+          {/* Cross-link to Personal EMI Calculator */}
           <div className="mt-8 bg-white border border-gray-100 rounded-2xl p-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                <span className="text-lg">🏢</span>
+                <span className="text-lg">👤</span>
               </div>
               <div>
-                <div className="font-bold text-gray-900 text-sm">Need a Business Loan?</div>
-                <div className="text-xs text-gray-400">Calculate EMI for MSME, Working Capital, Vehicle & more</div>
+                <div className="font-bold text-gray-900 text-sm">Looking for Personal Loans?</div>
+                <div className="text-xs text-gray-400">Calculate EMI for Personal, Home, or Car loans</div>
               </div>
             </div>
-            <Link href="/business/emi-calculator"
+            <Link href="/emi-calculator"
               className="inline-flex items-center gap-2 text-[#C0001B] font-bold text-sm hover:underline">
-              Business EMI Calculator <ArrowRight className="w-4 h-4" />
+              Personal EMI Calculator <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

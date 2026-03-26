@@ -175,6 +175,12 @@ const megaMenuData = {
             { label: "Micro Finance", href: "/micro-finance", desc: "SHG / JLG lending" },
             { label: "Self Employed Loan", href: "/self-employed-loan", desc: "For traders & freelancers" },
           ]
+        },
+        {
+          heading: "Tools",
+          links: [
+            { label: "Business EMI Calculator", href: "/business/emi-calculator", desc: "Plan your business loan EMI" },
+          ]
         }
       ],
       highlight: { label: "Working Capital", rate: "From 13.00%", href: "/working-capital-loan" }

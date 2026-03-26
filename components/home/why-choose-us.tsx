@@ -156,7 +156,7 @@ export function WhyChooseUs() {
               {/* Top accent bar on hover */}
               <div className="absolute top-0 left-0 right-0 h-[3px] bg-[#C0001B] scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 rounded-t-2xl" />
               {/* Ghost number */}
-              <span className="absolute top-3 right-4 text-6xl font-bold text-gray-100 select-none">{p.num}</span>
+              <span className="absolute top-3 right-4 text-6xl font-bold text-[#C0001B]/15 select-none">{p.num}</span>
               {/* Icon */}
               <div className="w-11 h-11 rounded-xl bg-[#C0001B]/8 flex items-center justify-center mb-4 group-hover:bg-[#C0001B] transition-colors relative z-10">
                 <p.icon className="w-5 h-5 text-[#C0001B] group-hover:text-white transition-colors" />

@@ -1,15 +1,15 @@
 "use client"
 import { useState, useEffect } from "react"
-import { ArrowRight, PiggyBank, Repeat, Coins, Monitor, Calculator, MapPin, CreditCard, Smartphone, ChevronLeft, ChevronRight } from "lucide-react"
+import { ArrowRight, PiggyBank, Repeat, Coins, Monitor, Calculator, MapPin, ChevronLeft, ChevronRight, CreditCard, Smartphone, Shield } from "lucide-react"
 import Link from "next/link"
 
 const quickApplyItems = [
-  { label: "Savings Account", href: "/savings-account", icon: PiggyBank },
-  { label: "Recurring Deposit", href: "/recurring-deposit", icon: Repeat },
-  { label: "Gold Loan", href: "/gold-loan", icon: Coins },
-  { label: "Net Banking", href: "/net-banking", icon: Monitor },
-  { label: "EMI Calculator", href: "/emi-calculator", icon: Calculator },
-  { label: "Locate Branch", href: "/locate-us", icon: MapPin },
+  { label: "Savings Account", href: "/savings-account", icon: PiggyBank, color: "bg-[#C0001B]" },
+  { label: "Recurring Deposit", href: "/recurring-deposit", icon: Repeat, color: "bg-emerald-500" },
+  { label: "Gold Loan", href: "/gold-loan", icon: Coins, color: "bg-amber-500" },
+  { label: "Net Banking", href: "/net-banking", icon: Monitor, color: "bg-blue-500" },
+  { label: "EMI Calculator", href: "/emi-calculator", icon: Calculator, color: "bg-violet-500" },
+  { label: "Locate Branch", href: "/locate-us", icon: MapPin, color: "bg-rose-500" },
 ]
 
 const promoSlides = [
@@ -19,7 +19,7 @@ const promoSlides = [
     subline: "Protected up to ₹5,00,000 by Govt. of India",
     cta: "Learn More",
     ctaHref: "/about-us",
-    bg: "from-[#C0001B] to-[#8B0015]",
+    icon: Shield,
   },
   {
     tag: "Zero Balance Account",
@@ -27,7 +27,7 @@ const promoSlides = [
     subline: "No minimum balance. Earn up to 6% interest p.a.",
     cta: "Open Now",
     ctaHref: "/savings-account",
-    bg: "from-[#8B0015] to-[#C0001B]",
+    icon: PiggyBank,
   },
   {
     tag: "Special FD Offer",
@@ -35,19 +35,27 @@ const promoSlides = [
     subline: "1-Year Fixed Deposit — Senior Citizens get 7.50%",
     cta: "Invest Today",
     ctaHref: "/time-deposit",
-    bg: "from-[#B00018] to-[#7A0012]",
+    icon: Coins,
   },
 ]
 
 export function QuickApply() {
   const [current, setCurrent] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
 
   useEffect(() => {
-    const t = setInterval(() => setCurrent(c => (c + 1) % promoSlides.length), 4000)
+    const t = setInterval(() => {
+      setIsAnimating(true)
+      setTimeout(() => {
+        setCurrent(c => (c + 1) % promoSlides.length)
+        setIsAnimating(false)
+      }, 300)
+    }, 5000)
     return () => clearInterval(t)
   }, [])
 
   const slide = promoSlides[current]
+  const SlideIcon = slide.icon
 
   return (
     <section className="bg-white py-10 border-t border-gray-100">
@@ -55,55 +63,63 @@ export function QuickApply() {
         <div className="grid lg:grid-cols-2 gap-8 items-stretch">
 
           {/* Left — Apply Now grid */}
-          <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-            <h2 className="text-base font-bold text-gray-800 mb-5">Apply Now</h2>
+          <div className="bg-gray-50 rounded-3xl p-6 border border-gray-100">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-base font-bold text-gray-800">Quick Actions</h2>
+              <Link href="/savings-account" className="text-xs font-bold text-[#C0001B] hover:underline">View All →</Link>
+            </div>
             <div className="grid grid-cols-3 gap-3">
               {quickApplyItems.map((item) => (
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="flex flex-col items-center gap-2.5 p-4 bg-white rounded-xl border border-gray-100 hover:border-[#C0001B]/30 hover:shadow-md transition-all group text-center"
+                  className="flex flex-col items-center gap-2.5 p-4 bg-white rounded-2xl border border-gray-100 hover:border-[#C0001B]/20 hover:shadow-lg transition-all group text-center"
                 >
-                  <div className="w-11 h-11 rounded-xl bg-[#C0001B]/8 flex items-center justify-center group-hover:bg-[#C0001B]/15 transition-colors">
-                    <item.icon className="w-5 h-5 text-[#C0001B]" />
+                  <div className={`w-11 h-11 rounded-xl ${item.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm`}>
+                    <item.icon className="w-5 h-5 text-white" />
                   </div>
-                  <span className="text-[12px] font-semibold text-gray-600 group-hover:text-[#C0001B] leading-tight transition-colors">{item.label}</span>
+                  <span className="text-[12px] font-bold text-gray-600 group-hover:text-gray-900 leading-tight transition-colors">{item.label}</span>
                 </Link>
               ))}
             </div>
           </div>
 
           {/* Right — Promo carousel */}
-          <div className={`relative rounded-2xl overflow-hidden bg-gradient-to-br ${slide.bg} text-white p-8 flex flex-col justify-between min-h-[220px] transition-all duration-500`}>
-            {/* Decorative circle */}
-            <div className="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full" />
-            <div className="absolute -right-4 bottom-0 w-32 h-32 bg-white/5 rounded-full" />
+          <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#C0001B] to-[#8B0015] text-white p-8 flex flex-col justify-between min-h-[240px]">
+            {/* Decorative elements */}
+            <div className="absolute -right-16 -top-16 w-56 h-56 bg-white/5 rounded-full" />
+            <div className="absolute -left-8 bottom-0 w-40 h-40 bg-white/5 rounded-full" />
+            <div className="absolute right-8 bottom-8 w-20 h-20 bg-white/5 rounded-full" />
 
-            <div className="relative z-10">
-              <span className="inline-block text-[11px] font-bold uppercase tracking-widest bg-white/20 px-3 py-1 rounded-full mb-4">{slide.tag}</span>
+            <div className={`relative z-10 transition-all duration-300 ${isAnimating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"}`}>
+              <div className="flex items-start justify-between mb-4">
+                <span className="inline-block text-[11px] font-bold uppercase tracking-widest bg-white/15 backdrop-blur-sm px-3 py-1.5 rounded-lg">{slide.tag}</span>
+                <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">
+                  <SlideIcon className="w-6 h-6 text-white/80" />
+                </div>
+              </div>
               <h3 className="text-[28px] font-bold leading-tight">{slide.headline}</h3>
-              <p className="text-white/80 text-sm mt-2">{slide.subline}</p>
+              <p className="text-white/70 text-sm mt-2">{slide.subline}</p>
             </div>
 
             <div className="relative z-10 flex items-center justify-between mt-6">
               <Link
                 href={slide.ctaHref}
-                className="inline-flex items-center gap-2 bg-white text-[#C0001B] text-sm font-bold px-5 py-2.5 rounded-full hover:bg-gray-50 transition-colors shadow-lg"
+                className="inline-flex items-center gap-2 bg-white text-[#C0001B] text-sm font-bold px-6 py-2.5 rounded-xl hover:bg-gray-50 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
               >
                 {slide.cta} <ArrowRight className="w-4 h-4" />
               </Link>
 
-              {/* Slide indicators */}
               <div className="flex items-center gap-2">
-                <button onClick={() => setCurrent(c => (c - 1 + promoSlides.length) % promoSlides.length)} className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+                <button onClick={() => setCurrent(c => (c - 1 + promoSlides.length) % promoSlides.length)} className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <div className="flex gap-1.5">
                   {promoSlides.map((_, i) => (
-                    <button key={i} onClick={() => setCurrent(i)} className={`w-1.5 h-1.5 rounded-full transition-all ${i === current ? "bg-white w-4" : "bg-white/40"}`} />
+                    <button key={i} onClick={() => setCurrent(i)} className={`h-1.5 rounded-full transition-all duration-300 ${i === current ? "bg-white w-6" : "bg-white/30 w-1.5 hover:bg-white/50"}`} />
                   ))}
                 </div>
-                <button onClick={() => setCurrent(c => (c + 1) % promoSlides.length)} className="w-7 h-7 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+                <button onClick={() => setCurrent(c => (c + 1) % promoSlides.length)} className="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
